@@ -52,7 +52,7 @@ function bruteForce(origBoard) {
 	var iterations = 0
 
 	while (iterations < 1000000) {
-		if (loc >= 80) {
+		if (loc > 80) {
 			return board
 		}
 
@@ -109,7 +109,7 @@ const pointingPairs = "017903600000080000900000507072010430000402070064370250701
 const solvedBoard = "246975138589316274371248695498621753132754986657839421724183569865492317913567842"
 
 
-var m = stringToMatrix(XWINGEXAMPLE)
+var m = stringToMatrix(pointingPairs)
 // printBoard(m)
 var solved = bruteForce(m)
 printBoard(solved)
