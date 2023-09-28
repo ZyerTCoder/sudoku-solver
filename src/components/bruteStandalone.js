@@ -1,7 +1,10 @@
 const floor = Math.floor
 console.log("hi")
+const now = Date.now
+const t0 = now()
 
 function printBoard(board) {
+	if (board == -1) { return -1 }
 	board = board.join("").replaceAll(",", "").replaceAll("0", ".")
 	console.log(board)
 	for (row = 0; row<81; row+=9) {
@@ -51,13 +54,15 @@ function bruteForce(origBoard) {
 	var loc = 0
 	var iterations = 0
 
-	while (iterations < 1000000) {
+	while (true) {
 		if (loc > 80) {
+			console.log("Solved the board", iterations)
 			return board
 		}
 
 		iterations++
-		if (iterations % 1000 == 0) {
+		if (iterations % 10000000 == 0) {
+			console.log(floor(iterations/1000000) + "mil iterations, running for " + floor((now()-t0) / 1000) + "s (" + floor((now()-t0)/(iterations/10000000)) + "ms per 10 mil)")
 			// console.log(iterations)
 		}
 		// printBoard(board)
@@ -77,10 +82,18 @@ function bruteForce(origBoard) {
 		board[row][col] = 0
 		if (guess > 9) {
 			loc--
-			
+			if (loc < 0) {
+				console.log("Invalid board, could not solve")
+				return -1
+			}
+
 			while (origBoard[floor(loc/9)][floor(loc%9)] != 0) {
 				loc--
-				if (loc < 0) { throw new Error("Invalid board provided, no solutions found") }
+				if (loc < 0) {
+					console.log("Invalid board, could not solve")
+					return -1
+					// throw new Error("Invalid board provided, no solutions found")
+				}
 			}
 		} else {
 			if ( isGuessValid(board, guess, row, col) ) {
@@ -98,18 +111,28 @@ function bruteForce(origBoard) {
 	return board
 }
 
-const EASYBOARD = "...1.5...14....67..8...24...63.7..1.9.......3.1..9.52...72...8..26....35...4.9..."
-const INVALIDBOARD = "...1.5...24....67..8...24...63.7..1.9.......3.1..9.52...72...8..26....35...4.9..."
-const HARDFORBACKTRACKING = "..............3.85..1.2.......5.7.....4...1...9.......5......73..2.1........4...9"
-const XWINGEXAMPLE = ".93..456..6...314...46.83.9981345...347286951652.7.4834.6..289....4...1..298...34"
-const hiddenSingles = "200070038000006070300040600008020700100000006007030400004080009060400000910060002"
-const nakedPairs = "400000938032094100095300240370609004529001673604703090957008300003900400240030709"
-const hiddenPairs = "000000000904607000076804100309701080008000300050308702007502610000403208000000000"
-const pointingPairs = "017903600000080000900000507072010430000402070064370250701000065000030000005601720"
-const solvedBoard = "246975138589316274371248695498621753132754986657839421724183569865492317913567842"
+const test_boards = {
+	["EASY_BOARD"] : "...1.5...14....67..8...24...63.7..1.9.......3.1..9.52...72...8..26....35...4.9...",
+	["XWING_EXAMPLE"] : ".93..456..6...314...46.83.9981345...347286951652.7.4834.6..289....4...1..298...34",
+	["HIDDEN_SINGLES"] : "200070038000006070300040600008020700100000006007030400004080009060400000910060002",
+	["NAKED_PAIRS"] : "400000938032094100095300240370609004529001673604703090957008300003900400240030709",
+	["HIDDEN_PAIRS"] : "000000000904607000076804100309701080008000300050308702007502610000403208000000000",
+	["POINTING_PAIRS"] : "017903600000080000900000507072010430000402070064370250701000065000030000005601720",
+	["SOLVED_BOARD"] : "246975138589316274371248695498621753132754986657839421724183569865492317913567842",
+	["INVALID_BOARD"] : "...1.5...24....67..8...24...63.7..1.9.......3.1..9.52...72...8..26....35...4.9...",
+	["HARD_FOR_BACKTRACKING"] : "..............3.85..1.2.......5.7.....4...1...9.......5......73..2.1........4...9",
+}
 
+// for (const [key, value] of Object.entries(test_boards)) {
+// 	console.log(key)
+// 	var m = stringToMatrix(value)
+// 	var solved = bruteForce(m)
+// 	printBoard(solved)
+// }
 
-var m = stringToMatrix(pointingPairs)
-// printBoard(m)
+var m = stringToMatrix(test_boards["EASY_BOARD"])
 var solved = bruteForce(m)
 printBoard(solved)
+
+const end = now()
+console.log(`Execution time: ${end - t0} ms`)
