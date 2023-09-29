@@ -136,7 +136,7 @@ var iteration = iterator.next()
 while (!iteration.done) {
 	i++
 	var v = iteration.value
-	console.log(v.col, v.row, v.guess)
+	console.log(v.row, v.col, v.guess)
 	iteration = iterator.next()
 }
 printBoard(v.board)
