@@ -1,7 +1,7 @@
 const floor = Math.floor
 
 function stringToMatrix(inp) {
-	let inp = inp.replaceAll(/[^\d]/g, "0")
+	inp = inp.replaceAll(/[^\d]/g, "0")
 	let board = []
 	for (let r=0; r<9; r++) {
 		board[r] = []
@@ -123,6 +123,18 @@ const test_boards = {
 }
 
 if (typeof require !== 'undefined' && require.main === module) {
+	function printBoard(board) {
+		if (board == -1) { return -1 }
+		board = board.join("").replaceAll(",", "").replaceAll("0", ".")
+		console.log(board)
+		for (row = 0; row<81; row+=9) {
+			console.log(board.substring(row, row+3) + "|" + board.substring(row+3, row+6) + "|" + board.substring(row+6, row+9))
+			if (row == 18 || row == 45) {
+				console.log("---+---+---")
+			}
+		}
+	}
+
 	const now = Date.now
 	const t0 = now()
 
@@ -133,7 +145,7 @@ if (typeof require !== 'undefined' && require.main === module) {
 	let iteration = iterator.next()
 	while (!iteration.done) {
 		i++
-		let v = iteration.value
+		var v = iteration.value
 		console.log(v.row, v.col, v.guess)
 		iteration = iterator.next()
 	}
