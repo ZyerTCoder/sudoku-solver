@@ -1,19 +1,4 @@
 const floor = Math.floor
-console.log("hi")
-const now = Date.now
-const t0 = now()
-
-function printBoard(board) {
-	if (board == -1) { return -1 }
-	board = board.join("").replaceAll(",", "").replaceAll("0", ".")
-	console.log(board)
-	for (row = 0; row<81; row+=9) {
-		console.log(board.substring(row, row+3) + "|" + board.substring(row+3, row+6) + "|" + board.substring(row+6, row+9))
-		if (row == 18 || row == 45) {
-			console.log("---+---+---")
-		}
-	}
-}
 
 function stringToMatrix(inp) {
 	var inp = inp.replaceAll(/[^\d]/g, "0")
@@ -30,18 +15,18 @@ function stringToMatrix(inp) {
 function isGuessValid(board, guess, row, col) {
 	if (board[row][col] != 0 ) { return false }
 	
-	for (r=0; r<9; r++) {
+	for (let r=0; r<9; r++) {
 		if (board[r][col] == guess) { return false }
 	}
 
-	for (c=0; c<9; c++) {
+	for (let c=0; c<9; c++) {
 		if (board[row][c] == guess) { return false }
 	}
 
 	var x = floor(row/3)*3
 	var y = floor(col/3)*3
-	for (r=x; r<x+3; r++) {
-		for (c=y; c<y+3; c++) {
+	for (let r=x; r<x+3; r++) {
+		for (let c=y; c<y+3; c++) {
 			if (board[r][c] == guess) { return false }
 		}
 	}
@@ -50,6 +35,12 @@ function isGuessValid(board, guess, row, col) {
 }
 
 function* bruteForce(origBoard) {
+	if (typeof(origBoard) === "string") {
+		origBoard = stringToMatrix(origBoard)
+	}
+
+	console.log(origBoard)
+
 	var board = JSON.parse(JSON.stringify(origBoard))
 	var loc = 0
 	var iterations = 0
@@ -63,9 +54,7 @@ function* bruteForce(origBoard) {
 		iterations++
 		if (iterations % 10000000 == 0) {
 			console.log(floor(iterations/1000000) + "mil iterations, running for " + floor((now()-t0) / 1000) + "s (" + floor((now()-t0)/(iterations/10000000)) + "ms per 10 mil)")
-			// console.log(iterations)
 		}
-		// printBoard(board)
 		var row = floor(loc/9)
 		var col = floor(loc%9)
 		if (row >= 9 || row < 0) {
@@ -78,8 +67,14 @@ function* bruteForce(origBoard) {
 		}
 
 		var guess = board[row][col] + 1
-		// console.log("guess", guess)
 		board[row][col] = 0
+
+		yield {
+			board: board, 
+			row: row,
+			col: col,
+			guess: guess,
+		}
 		if (guess > 9) {
 			loc--
 			if (loc < 0) {
@@ -99,7 +94,6 @@ function* bruteForce(origBoard) {
 			if ( isGuessValid(board, guess, row, col) ) {
 				board[row][col] = guess
 				loc++
-				g = 0
 				yield {
 					board: board, 
 					row: row,
@@ -128,19 +122,26 @@ const test_boards = {
 	["HARD_FOR_BACKTRACKING"] : "..............3.85..1.2.......5.7.....4...1...9.......5......73..2.1........4...9",
 }
 
-var m = stringToMatrix(test_boards["EASY_BOARD"])
-var iterator = bruteForce(m)
+if (typeof require !== 'undefined' && require.main === module) {
+	const now = Date.now
+	const t0 = now()
 
-var i = 0
-var iteration = iterator.next()
-while (!iteration.done) {
-	i++
-	var v = iteration.value
-	console.log(v.row, v.col, v.guess)
-	iteration = iterator.next()
+	var m = stringToMatrix(test_boards["EASY_BOARD"])
+	var iterator = bruteForce(m)
+	
+	var i = 0
+	var iteration = iterator.next()
+	while (!iteration.done) {
+		i++
+		var v = iteration.value
+		console.log(v.row, v.col, v.guess)
+		iteration = iterator.next()
+	}
+	printBoard(v.board)
+	console.log(i, "yields")
+	
+	const end = now()
+	console.log(`Execution time: ${end - t0} ms`)
 }
-printBoard(v.board)
-console.log(i, "yields")
 
-const end = now()
-console.log(`Execution time: ${end - t0} ms`)
+export default bruteForce
