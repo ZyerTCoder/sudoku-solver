@@ -1,8 +1,8 @@
 const floor = Math.floor
 
 function stringToMatrix(inp) {
-	var inp = inp.replaceAll(/[^\d]/g, "0")
-	var board = []
+	let inp = inp.replaceAll(/[^\d]/g, "0")
+	let board = []
 	for (let r=0; r<9; r++) {
 		board[r] = []
 		for (let c=0; c<9; c++) {
@@ -23,8 +23,8 @@ function isGuessValid(board, guess, row, col) {
 		if (board[row][c] == guess) { return false }
 	}
 
-	var x = floor(row/3)*3
-	var y = floor(col/3)*3
+	let x = floor(row/3)*3
+	let y = floor(col/3)*3
 	for (let r=x; r<x+3; r++) {
 		for (let c=y; c<y+3; c++) {
 			if (board[r][c] == guess) { return false }
@@ -41,9 +41,9 @@ function* bruteForce(origBoard) {
 
 	console.log(origBoard)
 
-	var board = JSON.parse(JSON.stringify(origBoard))
-	var loc = 0
-	var iterations = 0
+	let board = JSON.parse(JSON.stringify(origBoard))
+	let loc = 0
+	let iterations = 0
 
 	while (true) {
 		if (loc > 80) {
@@ -55,8 +55,8 @@ function* bruteForce(origBoard) {
 		if (iterations % 10000000 == 0) {
 			console.log(floor(iterations/1000000) + "mil iterations, running for " + floor((now()-t0) / 1000) + "s (" + floor((now()-t0)/(iterations/10000000)) + "ms per 10 mil)")
 		}
-		var row = floor(loc/9)
-		var col = floor(loc%9)
+		let row = floor(loc/9)
+		let col = floor(loc%9)
 		if (row >= 9 || row < 0) {
 			throw new Error('Something went wrong while iterating through board, loc:${loc}')
 		}
@@ -66,7 +66,7 @@ function* bruteForce(origBoard) {
 			continue
 		}
 
-		var guess = board[row][col] + 1
+		let guess = board[row][col] + 1
 		board[row][col] = 0
 
 		yield {
@@ -126,14 +126,14 @@ if (typeof require !== 'undefined' && require.main === module) {
 	const now = Date.now
 	const t0 = now()
 
-	var m = stringToMatrix(test_boards["EASY_BOARD"])
-	var iterator = bruteForce(m)
+	let m = stringToMatrix(test_boards["EASY_BOARD"])
+	let iterator = bruteForce(m)
 	
-	var i = 0
-	var iteration = iterator.next()
+	let i = 0
+	let iteration = iterator.next()
 	while (!iteration.done) {
 		i++
-		var v = iteration.value
+		let v = iteration.value
 		console.log(v.row, v.col, v.guess)
 		iteration = iterator.next()
 	}
