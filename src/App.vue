@@ -60,7 +60,6 @@ export default {
 				let bfIteration = bruteForceIterator.next()
 				if (!bfIteration.done) {
 					running[0] = setTimeout(iterateNextBrute, timer)
-					console.log(running[0])
 				} else {
 					running[0] = false
 					return 0
