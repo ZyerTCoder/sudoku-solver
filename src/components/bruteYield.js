@@ -51,19 +51,19 @@ function* bruteForce(origBoard) {
 
 	while (iterations <= 10000000) {
 		if (loc > 80) {
-			console.log("Bruteforce solved the board in", iterations, "iterations")
+			console.log(`Bruteforce solved the board in ${iterations} iterations`)
 			console.debug("solved board:", board)
 			return board
 		}
 
 		iterations++
 		if (iterations % 1000000 == 0) {
-			console.warn(floor(iterations/1000000) + "mil iterations, running for " + floor((now()-t0) / 1000) + "s (" + floor((now()-t0)/(iterations/10000000)) + "ms per 10 mil)")
+			console.warn(`${floor(iterations/1000000)} mil iterations, running for ${floor((now()-t0) / 1000)}s (${floor((now()-t0)/(iterations/10000000))}ms per 10 mil)`)
 		}
 		let row = floor(loc/9)
 		let col = floor(loc%9)
 		if (row >= 9 || row < 0) {
-			throw new Error('Something went wrong while iterating through board, loc:${loc}')
+			throw new Error(`Something went wrong while iterating through board, loc:${loc}`)
 		}
 
 		if (origBoard[row][col] != 0) {
