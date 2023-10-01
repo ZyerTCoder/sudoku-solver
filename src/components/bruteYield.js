@@ -12,6 +12,10 @@ function stringToMatrix(inp) {
 	return board
 }
 
+function matrixToString(board) {
+	return board.join("").replaceAll(",", "").replaceAll("0", ".")
+}
+
 function isGuessValid(board, guess, row, col) {
 	if (board[row][col] != 0 ) { return false }
 	
@@ -39,21 +43,22 @@ function* bruteForce(origBoard) {
 		origBoard = stringToMatrix(origBoard)
 	}
 
-	console.log(origBoard)
+	console.debug("running bruteforce on:", origBoard)
 
 	let board = JSON.parse(JSON.stringify(origBoard))
 	let loc = 0
 	let iterations = 0
 
-	while (true) {
+	while (iterations <= 10000000) {
 		if (loc > 80) {
-			console.log("Solved the board", iterations)
+			console.log("Bruteforce solved the board in", iterations, "iterations")
+			console.debug("solved board:", board)
 			return board
 		}
 
 		iterations++
-		if (iterations % 10000000 == 0) {
-			console.log(floor(iterations/1000000) + "mil iterations, running for " + floor((now()-t0) / 1000) + "s (" + floor((now()-t0)/(iterations/10000000)) + "ms per 10 mil)")
+		if (iterations % 1000000 == 0) {
+			console.warn(floor(iterations/1000000) + "mil iterations, running for " + floor((now()-t0) / 1000) + "s (" + floor((now()-t0)/(iterations/10000000)) + "ms per 10 mil)")
 		}
 		let row = floor(loc/9)
 		let col = floor(loc%9)
@@ -68,13 +73,7 @@ function* bruteForce(origBoard) {
 
 		let guess = board[row][col] + 1
 		board[row][col] = 0
-
-		yield {
-			board: board, 
-			row: row,
-			col: col,
-			guess: guess,
-		}
+		
 		if (guess > 9) {
 			loc--
 			if (loc < 0) {
@@ -106,7 +105,7 @@ function* bruteForce(origBoard) {
 			
 		}
 	}
-	console.log("Ran for too long, stopped")
+	console.warn("Bruteforce ran for too long, stopped")
 	return board
 }
 
