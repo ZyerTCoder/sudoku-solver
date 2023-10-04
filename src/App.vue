@@ -9,7 +9,7 @@
 <script>
 import Board from "./components/Board.vue"
 import bruteforce from "./scripts/bruteforce.js"
-import { test_boards } from "./scripts/sudoku"
+import exampleSudokus from "./scripts/exampleSudokus"
 
 export default {
 	name: 'App',
@@ -22,7 +22,7 @@ export default {
 		}
 	},
 	methods: {
-		loadSudoku(board = test_boards["EASY_BOARD"]) {
+		loadSudoku(board = exampleSudokus["EASY_BOARD"]) {
 			const boardDisplay = this.$refs.board
 			for (let i in board) {
 				let n = Number(board[i])
