@@ -9,7 +9,8 @@
 </template>
 
 <script>
-import Cell from './Cell.vue';
+import Cell from './Cell.vue'
+
 export default {
 	name: "Board",
 	components: { Cell },

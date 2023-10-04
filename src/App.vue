@@ -8,7 +8,7 @@
 
 <script>
 import Board from "./components/Board.vue"
-import bruteForce from "./components/bruteYield.js"
+import bruteForce from "./scripts/bruteforce.js"
 
 export default {
 	name: 'App',
