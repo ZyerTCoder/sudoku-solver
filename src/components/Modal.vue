@@ -15,6 +15,7 @@ export default {
 		handlePasteEvent(event) {
 			let board = event.clipboardData.getData("text")
 			this.$emit('load', board)
+			this.$emit('close')
 		}
 	},
 	mounted() {
