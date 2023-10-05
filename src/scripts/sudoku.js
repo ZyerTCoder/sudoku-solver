@@ -1,6 +1,9 @@
 const floor = Math.floor
 
 export function stringToMatrix(inp) {
+	if (typeof(inp) !== "string" || inp.length !== 81) {
+		throw TypeError("Input doesn't fit a sudoku string")
+	}
 	inp = inp.replaceAll(/[^\d]/g, "0")
 	let board = []
 	for (let r=0; r<9; r++) {
@@ -11,6 +14,38 @@ export function stringToMatrix(inp) {
 	}
 	return board
 }
+
+export class Sudoku {
+	#board
+	#unsolvedCells
+
+	constructor(sudokuString) {
+		this.#board = stringToMatrix(sudokuString)
+		this.#unsolvedCells = 81
+
+		for (let row=0; row<9; row++) {
+			for (let col=0; col<9; col++) {
+				if (this.#board[row][col] == 0) {
+					this.#board[row][col] = [
+						true, true, true,
+						true, true, true,
+						true, true, true]
+				} else {
+					this.#unsolvedCells--
+				}
+			}
+		}
+	}
+
+	get unsolvedCells() {
+		return this.#unsolvedCells
+	}
+
+	get board() {
+		return this.#board
+	}
+}
+
 
 export function matrixToString(board) {
 	return board.join("").replaceAll(",", "").replaceAll("0", ".")
@@ -48,4 +83,8 @@ export function printBoard(board) {
 			console.log("---+---+---")
 		}
 	}
+}
+
+export function isSudokuBoard(board) {
+	console.log(typeof(board))
 }
