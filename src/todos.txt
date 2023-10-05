@@ -1,0 +1,12 @@
+- add functions to manipulate candidates on displayed board
+- add sudoku solving tech
+
+- add export sudoku button with timed modal saying "copied to clipboard"
+- add a scrollbar to the load sudoku modal for when you have too many options
+
+- exampleSudokus should just be a json file
+- adding paste event listeners on the modal shouldnt be done on Modal.vue
+since it is meant to be reused by every modal in the app, solution would be
+adding these via app.vue (not ideal) or making a second modal, SudokuPickerModal
+which extends from Modal.vue
+- add escape as a possible closing method for modals
