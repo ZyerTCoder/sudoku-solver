@@ -63,7 +63,7 @@ export default {
 			let cells = this.$refs.cells
 			for (let i in cells) {
 				cells[i].solved = 0
-				cells[i].color = "red"
+				cells[i].text_color = "#029dc4"
 			}
 		},
 	}
