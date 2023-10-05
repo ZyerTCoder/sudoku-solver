@@ -1,29 +1,55 @@
 <template>
 	<h1>{{ title }}</h1>
-	<button @click="loadSudoku()">Load sudoku</button>
-	<button @click="bruteforceSudoku()" :disabled="running_brute_force[0]">Brute-force</button>
+	<button @click="toggleModal()">Load sudoku</button>
+	<button @click="bruteforceSudoku()" :disabled="running_brute_force[0]">
+		Brute-force
+	</button>
 	<button @click="resetBoard()">Reset Board</button>
 	<Board ref="board"/>
+	<Modal 
+		v-if="showModal"
+		@close="toggleModal"
+		@load="loadSudoku"
+	>
+		<p>Paste your own or pick from the examples below</p>
+		<button 
+			class="modalButton" 
+			v-for="(value, key) in examples" 
+			@click="loadSudoku(value); toggleModal()"
+		>
+			{{ key }}
+		</button>
+	</Modal>
 </template>
 
 <script>
 import Board from "./components/Board.vue"
+import Modal from "./components/Modal.vue"
+
 import bruteforce from "./scripts/bruteforce.js"
-import exampleSudokus from "./scripts/exampleSudokus"
+import exampleSudokus from "./scripts/exampleSudokus.js"
 
 export default {
 	name: 'App',
-	components: { Board },
+	components: { Board, Modal },
 	data () {
 		return {
 			title: "Sudoku Solver",
 			loop_timer: 16,
 			running_brute_force: [false],
+			showModal: false,
+			examples: exampleSudokus,
 		}
 	},
 	methods: {
-		loadSudoku(board = exampleSudokus["EASY_BOARD"]) {
+		loadSudoku(board = exampleSudokus["Easy"]) {
+			if (typeof(board) !== "string" || board.length !== 81) {
+				return console.warn("Tried to load invalid sudoku:", board)
+			}
+			
+			this.resetBoard()
 			const boardDisplay = this.$refs.board
+
 			for (let i in board) {
 				let n = Number(board[i])
 				if (n) {
@@ -66,7 +92,10 @@ export default {
 			}
 			this.$refs.board.resetBoard()
 		},
-	}
+		toggleModal() {
+			this.showModal = !this.showModal
+		},
+	},
 }
 </script>
 
@@ -85,5 +114,11 @@ button {
 	margin: 10px auto;
 	width: 100px;
 	height: 30px;
+}
+
+.modalButton {
+	margin: 5px auto;
+	border-radius: 4px;
+	width: 180px;
 }
 </style>
