@@ -1,13 +1,14 @@
 import { Sudoku } from "../scripts/sudoku"
-import { assertType, expect, expectTypeOf, test } from "vitest"
+import { assertType, beforeEach, expect, expectTypeOf, test } from "vitest"
 
+const easy_board = "...1.5...14....67..8...24...63.7..1.9.......3.1..9.52...72...8..26....35...4.9..."
 const unsolvedCellStr = JSON.stringify([
 	true, true, true,
 	true, true, true,
 	true, true, true])
 
 test("normal sudoku object creation from string", () => {
-	const sudoku = new Sudoku("...1.5...14....67..8...24...63.7..1.9.......3.1..9.52...72...8..26....35...4.9...")
+	const sudoku = new Sudoku(easy_board)
 
 	// unsolvedCells logic
 	expect(sudoku.unsolvedCells).toBe(53)
@@ -61,4 +62,33 @@ test("new sudoku from invalid input fails", () => {
 	expect(() => new Sudoku("asdasd")).toThrowError(TypeError)
 	expect(() => new Sudoku(123)).toThrowError(TypeError)
 	expect(() => new Sudoku("123..123123...")).toThrowError(TypeError)
+})
+
+let sudoku
+beforeEach(() => {
+	sudoku = new Sudoku(easy_board)
+})
+
+test.todo("iterateBoard", () => {
+})
+
+test.todo("iterateRow", () => {
+})
+
+test.todo("iterateCol", () => {
+})
+
+test.todo("iterateBox", () => {
+})
+
+test.todo("isSolvedIncorrectly", () => {
+})
+
+test.todo("setSolvedCell", () => {	
+})
+
+test.todo("isCellSolved", () => {	
+})
+
+test.todo("isCellUnsolved", () => {	
 })
