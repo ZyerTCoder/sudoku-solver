@@ -1,11 +1,12 @@
 <template>
-	<h1>{{ title }}</h1>
+	<!-- <h1>{{ title }}</h1> -->
 	<button @click="toggleModal()">Load sudoku</button>
 	<button @click="bruteforceSudoku()" :disabled="running_brute_force[0]">
 		Brute-force
 	</button>
 	<button @click="resetBoard()">Reset Board</button>
-	<Board ref="board"/>
+	<button @click="rmBadCands()">Remove Cands</button>
+	<Board ref="board" @start="startTest" /> <!-- TEMP - DELETE the @start -->
 	<Modal 
 		v-if="showModal"
 		@close="toggleModal"
@@ -28,6 +29,7 @@ import Modal from "./components/Modal.vue"
 
 import bruteforce from "./scripts/bruteforce.js"
 import exampleSudokus from "./scripts/exampleSudokus.js"
+import {Sudoku} from "./scripts/sudoku.js"
 
 export default {
 	name: 'App',
@@ -47,16 +49,7 @@ export default {
 				return console.warn("Tried to load invalid sudoku:", board)
 			}
 			
-			this.resetBoard()
-			const boardDisplay = this.$refs.board
-
-			for (let i in board) {
-				let n = Number(board[i])
-				if (n) {
-					boardDisplay.setCellByIndex(i, n)
-					boardDisplay.setCellTextColor(i, "#c40f02")
-				}
-			}
+			this.sudoku = new Sudoku(board, this.$refs.board)
 		},
 		bruteforceSudoku() {
 			const boardDisplay = this.$refs.board
@@ -70,7 +63,7 @@ export default {
 			const setCell = boardDisplay.setCell
 			let timer = this.loop_timer
 			let running = this.running_brute_force
-
+			
 			function iterateNextBrute() {
 				let bfIteration = bruteforceIterator.next()
 				if (!bfIteration.done) {
@@ -82,7 +75,7 @@ export default {
 				let v = bfIteration.value
 				setCell(v.row, v.col, v.guess)
 			}
-
+			
 			iterateNextBrute()
 		},
 		resetBoard() {
@@ -95,6 +88,13 @@ export default {
 		toggleModal() {
 			this.showModal = !this.showModal
 		},
+		startTest() {
+			this.sudoku = new Sudoku("........................................................................7........", this.$refs.board)
+			this.sudoku.removeCandidatesSimple()
+		},
+		rmBadCands() {
+			this.sudoku.removeCandidatesSimple()
+		}
 	},
 }
 </script>

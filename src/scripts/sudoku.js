@@ -1,3 +1,5 @@
+import removeCandidatesSimple from "./removeCandidatesSimple.js"
+
 const floor = Math.floor
 
 export function stringToMatrix(inp) {
@@ -18,10 +20,25 @@ export function stringToMatrix(inp) {
 export class Sudoku {
 	#board
 	#unsolvedCells
+	#display
+	#changesStack = []
 
-	constructor(sudokuString) {
+	constructor(sudokuString, boardComponent) {
 		this.#board = stringToMatrix(sudokuString)
 		this.#unsolvedCells = 81
+
+		if (boardComponent) {
+			this.#display = boardComponent
+			this.#display.resetBoard()
+
+			for (let i in sudokuString) {
+				let n = Number(sudokuString[i])
+				if (n) {
+					this.#display.setCellByIndex(i, n)
+					this.#display.setCellTextColor(i, "#c40f02")
+				}
+			}
+		}
 
 		for (let row=0; row<9; row++) {
 			for (let col=0; col<9; col++) {
@@ -43,6 +60,20 @@ export class Sudoku {
 
 	get board() {
 		return this.#board
+	}
+
+	updateDisplay(changes) {
+		for (let change of changes) {
+			if (change.type === "rm") {
+				this.#display.removeCandidateFromCell(change.row, change.col, change.cand)
+			}
+		}
+	}
+
+	removeCandidatesSimple() {
+		let changes = removeCandidatesSimple(this)
+		console.log(changes)
+		this.updateDisplay(changes)
 	}
 }
 
