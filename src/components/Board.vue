@@ -22,30 +22,37 @@ export default {
 	mounted() {
 		let cells = this.$refs.cells
 		for (let index = 0; index < 9; index++) {
-				// verticals
-				let i1 = index * 9 + 3
-				let i2 = index * 9 + 6
-				cells[i1].left_border = "1px";
-				cells[i2].left_border = "1px";
-				// horizontals
-				let i3 = 9 * 2 + index
-				let i4 = 9 * 5 + index
-				cells[i3].bottom_border = "1px";
-				cells[i4].bottom_border = "1px";
-			}
+			// verticals
+			let i1 = index * 9 + 3
+			let i2 = index * 9 + 6
+			cells[i1].left_border = "1px";
+			cells[i2].left_border = "1px";
+			// horizontals
+			let i3 = 9 * 2 + index
+			let i4 = 9 * 5 + index
+			cells[i3].bottom_border = "1px";
+			cells[i4].bottom_border = "1px";
+		}
+		this.$emit("start") // TEMP - DELETE ME
 	},
 	methods: {
 		getCellByIndex(index) {
 			return this.$refs.cells[index]
 		},
 		getCell(row, col) {
-			return this.$refs.cells[col + 9 * row]
+			return this.$refs.cells[row * 9 + col]
 		},
 		setCellByIndex(index, value) {
 			this.$refs.cells[index].solved = value
 		},
 		setCell(row, col, value) {
-			this.$refs.cells[col + 9 * row].solved = value
+			this.$refs.cells[row * 9 + col].solved = value
+		},
+		isCellSolved(row, col) {
+			return this.$refs.cells[row * 9 + col].solved
+		},
+		isCellUnsolved(row, col) {
+			return !this.$refs.cells[row * 9 + col].solved
 		},
 		getBoardString() {
 			let cells = this.$refs.cells
@@ -59,10 +66,18 @@ export default {
 		setCellTextColor(index, color) {
 			this.$refs.cells[index].text_color = color
 		},
+		removeCandidateFromCell(row, col, candidate) {
+			this.$refs.cells[row * 9 + col].candidates[candidate-1] = false
+		},
 		resetBoard() {
 			let cells = this.$refs.cells
 			for (let i in cells) {
 				cells[i].solved = 0
+				cells[i].candidates = [
+					true, true, true,
+					true, true, true,
+					true, true, true,
+				]
 				cells[i].text_color = "#029dc4"
 			}
 		},
