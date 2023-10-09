@@ -10,7 +10,9 @@ export default function removeCandidatesSimple(board) {
 				for (let rr=0; rr<9; rr++) {
 					if (typeof(board.board[rr][col]) === "number") {
 						let cellValue = board.board[rr][col]
-						out.push({row:row, col:col, cand: cellValue, type:"rm"})
+						if (board.board[row][col][cellValue]) {
+							out.push({row:row, col:col, cand: cellValue, type:"rm"})
+						}
 					}
 				}
 
@@ -18,7 +20,9 @@ export default function removeCandidatesSimple(board) {
 				for (let cc=0; cc<9; cc++) {
 					if (typeof(board.board[row][cc]) === "number") {
 						let cellValue = board.board[row][cc]
-						out.push({row:row, col:col, cand: cellValue, type:"rm"})
+						if (board.board[row][col][cellValue]) {
+							out.push({row:row, col:col, cand: cellValue, type:"rm"})
+						}
 					}
 				}
 				
@@ -29,7 +33,9 @@ export default function removeCandidatesSimple(board) {
 					for (let cc=y*3; cc<y*3+3; cc++) {
 						if (typeof(board.board[rr][cc]) === "number") {
 							let cellValue = board.board[rr][cc]
-							out.push({row:row, col:col, cand: cellValue, type:"rm"})
+							if (board.board[row][col][cellValue]) {
+								out.push({row:row, col:col, cand: cellValue, type:"rm"})
+							}
 						}
 					}
 				}
