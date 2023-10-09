@@ -48,12 +48,12 @@ export default {
 		setCell(row, col, value) {
 			this.$refs.cells[row * 9 + col].solved = value
 		},
-		isCellSolved(row, col) {
-			return this.$refs.cells[row * 9 + col].solved
-		},
-		isCellUnsolved(row, col) {
-			return !this.$refs.cells[row * 9 + col].solved
-		},
+		// isCellSolved(row, col) {
+		// 	return this.$refs.cells[row * 9 + col].solved
+		// },
+		// isCellUnsolved(row, col) {
+		// 	return !this.$refs.cells[row * 9 + col].solved
+		// },
 		getBoardString() {
 			let cells = this.$refs.cells
 			let out = ""
@@ -67,17 +67,17 @@ export default {
 			this.$refs.cells[index].text_color = color
 		},
 		removeCandidateFromCell(row, col, candidate) {
-			this.$refs.cells[row * 9 + col].candidates[candidate-1] = false
+			this.$refs.cells[row * 9 + col].candidates[candidate] = false
 		},
 		resetBoard() {
 			let cells = this.$refs.cells
 			for (let i in cells) {
 				cells[i].solved = 0
-				cells[i].candidates = [
-					true, true, true,
-					true, true, true,
-					true, true, true,
-				]
+				cells[i].candidates = {
+					1: true, 2: true, 3: true,
+					4: true, 5: true, 6: true,
+					7: true, 8: true, 9: true,
+				}
 				cells[i].text_color = "#029dc4"
 			}
 		},

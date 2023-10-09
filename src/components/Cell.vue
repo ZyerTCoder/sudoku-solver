@@ -11,7 +11,7 @@
 			v-if="!solved"
 			v-for="(cand, i) in candidates"
 		>
-			<p class="candidate" v-if="cand">{{ i+1 }}</p>
+			<p class="candidate" v-if="cand">{{ i }}</p>
 		</div>
 	</div>
 </template>
@@ -22,11 +22,11 @@ export default {
 	data () {
 		return {
 			solved: 0,
-			candidates: [
-				true, true, true,
-				true, true, true,
-				true, true, true,
-			],
+			candidates: {
+				1: true, 2: true, 3: true,
+				4: true, 5: true, 6: true,
+				7: true, 8: true, 9: true,
+			},
 			bottom_border: "0px",
 			left_border: "0px",
 			text_color: "#029dc4",

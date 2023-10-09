@@ -1,3 +1,4 @@
+import checkSolvedCells from "./checkSolvedCells.js"
 import removeCandidatesSimple from "./removeCandidatesSimple.js"
 
 const floor = Math.floor
@@ -43,10 +44,11 @@ export class Sudoku {
 		for (let row=0; row<9; row++) {
 			for (let col=0; col<9; col++) {
 				if (this.#board[row][col] == 0) {
-					this.#board[row][col] = [
-						true, true, true,
-						true, true, true,
-						true, true, true]
+					this.#board[row][col] = {
+						1: true, 2: true, 3: true,
+						4: true, 5: true, 6: true,
+						7: true, 8: true, 9: true,
+					}
 				} else {
 					this.#unsolvedCells--
 				}
@@ -63,15 +65,35 @@ export class Sudoku {
 	}
 
 	updateDisplay(changes) {
-		for (let change of changes) {
-			if (change.type === "rm") {
-				this.#display.removeCandidateFromCell(change.row, change.col, change.cand)
+		for (let c of changes) {
+			c.cand = Number(c.cand)
+			if (c.type === "rm") {
+				this.#display.removeCandidateFromCell(c.row, c.col, c.cand)
+				this.#board[c.row][c.col][c.cand] = false
+			} else if (c.type === "solved") {
+				this.#display.setCell(c.row, c.col, c.cand)
+				this.#board[c.row][c.col] = c.cand
 			}
 		}
 	}
 
+	isCellSolved(row, col) {
+		let cell_type = typeof(this.#board[row][col])
+		return cell_type === "number"
+	}
+
+	isCellUnsolved(row, col) {
+		return !this.isCellSolved(row, col)
+	}
+
 	removeCandidatesSimple() {
 		let changes = removeCandidatesSimple(this)
+		console.log(changes)
+		this.updateDisplay(changes)
+	}
+
+	checkSolvedCells() {
+		let changes = checkSolvedCells(this)
 		console.log(changes)
 		this.updateDisplay(changes)
 	}
