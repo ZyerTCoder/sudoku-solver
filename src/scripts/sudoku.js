@@ -86,16 +86,44 @@ export class Sudoku {
 		return !this.isCellSolved(row, col)
 	}
 
+	next() {
+		const techs = [
+			{tech: this.removeCandidatesSimple, name: "removeCandidatesSimple"},
+			{tech: this.checkSolvedCells, name: "checkSolvedCells"},
+		]
+
+		let iterations = 0
+		while (this.#unsolvedCells !== 0 ) {
+			console.log(iterations++)
+			for (let tech of techs) {
+				console.log("applying", tech.name)
+				let out = tech.tech()
+				if (out) {
+					yield out
+					break
+				}
+			}
+		}
+	}
+
 	removeCandidatesSimple() {
 		let changes = removeCandidatesSimple(this)
-		console.log(changes)
-		this.updateDisplay(changes)
+		if (changes.length === 0) { changes = 0 }
+		if (changes) {
+			console.log(changes)
+			this.updateDisplay(changes)
+		}
+		return changes
 	}
 
 	checkSolvedCells() {
 		let changes = checkSolvedCells(this)
-		console.log(changes)
-		this.updateDisplay(changes)
+		if (changes.length === 0) { changes = 0 }
+		if (changes) {
+			console.log(changes)
+			this.updateDisplay(changes)
+		}
+		return changes
 	}
 }
 

@@ -5,7 +5,8 @@
 		Brute-force
 	</button>
 	<button @click="resetBoard()">Reset Board</button>
-	<button @click="rmBadCands()">Remove Cands</button>
+	<button @click="rmBadCands()">Rm Cands</button>
+	<button @click="next()">Next</button>
 	<Board ref="board" @start="startTest" /> <!-- TEMP - DELETE the @start -->
 	<Modal 
 		v-if="showModal"
@@ -89,11 +90,17 @@ export default {
 			this.showModal = !this.showModal
 		},
 		startTest() {
-			this.sudoku = new Sudoku("........................................................................7........", this.$refs.board)
+			this.sudoku = new Sudoku(exampleSudokus[`Easy`], this.$refs.board)
 			this.sudoku.removeCandidatesSimple()
 		},
 		rmBadCands() {
 			this.sudoku.removeCandidatesSimple()
+		},
+		checkSolved() {
+			this.sudoku.checkSolvedCells()
+		},
+		next() {
+			this.sudoku.next()
 		}
 	},
 }
