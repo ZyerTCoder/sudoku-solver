@@ -68,12 +68,16 @@ export class Sudoku {
 		for (let c of changes) {
 			c.cand = Number(c.cand)
 			if (c.type === "rm") {
-				this.#display.removeCandidateFromCell(c.row, c.col, c.cand)
 				this.#board[c.row][c.col][c.cand] = false
+				if (this.#display) {
+					this.#display.removeCandidateFromCell(c.row, c.col, c.cand)
+				}
 			} else if (c.type === "solved") {
-				this.#display.setCell(c.row, c.col, c.cand)
 				this.#board[c.row][c.col] = c.cand
 				this.#unsolvedCells--
+				if (this.#display) {
+					this.#display.setCell(c.row, c.col, c.cand)
+				}
 			}
 		}
 	}
