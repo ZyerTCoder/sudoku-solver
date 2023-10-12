@@ -1,12 +1,13 @@
 <template>
 	<!-- <h1>{{ title }}</h1> -->
 	<button @click="toggleModal()">Load sudoku</button>
-	<button @click="bruteforceSudoku()" :disabled="running_brute_force[0]">
+	<button @click="bruteforceSudoku()" :disabled="running_timer[0]">
 		Brute-force
 	</button>
+	<!-- :disabled="!sudoku" bits give a warning on load, find alternative -->
 	<button @click="resetBoard()">Reset Board</button>
-	<button @click="rmBadCands()">Rm Cands</button>
-	<button @click="next()">Next</button>
+	<button @click="next()">Next Step</button>
+	<button @click="autoNext()">Auto Step</button>
 	<Board ref="board" @start="startTest" /> <!-- TEMP - DELETE the @start -->
 	<Modal 
 		v-if="showModal"
@@ -39,9 +40,10 @@ export default {
 		return {
 			title: "Sudoku Solver",
 			loop_timer: 16,
-			running_brute_force: [false],
+			running_timer: [false],
 			showModal: false,
 			examples: exampleSudokus,
+			// sudoku: new Sudoku()
 		}
 	},
 	methods: {
@@ -54,6 +56,8 @@ export default {
 		},
 		bruteforceSudoku() {
 			const boardDisplay = this.$refs.board
+			const timer = this.loop_timer
+			const running_timer = this.running_timer
 			
 			if (!boardDisplay.getBoardString()) {
 				console.log("No board loaded")
@@ -62,15 +66,13 @@ export default {
 
 			let bruteforceIterator = bruteforce(boardDisplay.getBoardString())
 			const setCell = boardDisplay.setCell
-			let timer = this.loop_timer
-			let running = this.running_brute_force
 			
 			function iterateNextBrute() {
 				let bfIteration = bruteforceIterator.next()
 				if (!bfIteration.done) {
-					running[0] = setTimeout(iterateNextBrute, timer)
+					running_timer[0] = setTimeout(iterateNextBrute, timer)
 				} else {
-					running[0] = false
+					running_timer[0] = false
 					return 0
 				}
 				let v = bfIteration.value
@@ -80,27 +82,38 @@ export default {
 			iterateNextBrute()
 		},
 		resetBoard() {
-			if (this.running_brute_force[0]) {
-				clearTimeout(this.running_brute_force[0])
-				this.running_brute_force[0] = 0
+			if (this.running_timer[0]) {
+				clearTimeout(this.running_timer[0])
+				this.running_timer[0] = 0
 			}
 			this.$refs.board.resetBoard()
+			this.sudoku = 0
 		},
 		toggleModal() {
 			this.showModal = !this.showModal
 		},
 		startTest() {
-			this.sudoku = new Sudoku(exampleSudokus[`Easy`], this.$refs.board)
-			this.sudoku.removeCandidatesSimple()
+			// this.sudoku = new Sudoku(exampleSudokus[`Easy`], this.$refs.board)
 		},
-		rmBadCands() {
-			this.sudoku.removeCandidatesSimple()
-		},
-		checkSolved() {
-			this.sudoku.checkSolvedCells()
+		autoNext() {
+			let timer = 250
+			let running_timer = this.running_timer
+			let next = this.next
+
+			function takeStep() {
+				let notdone = next()
+				if (notdone) {
+					running_timer[0] = setTimeout(takeStep, timer)
+				}
+			}
+			takeStep()
 		},
 		next() {
-			this.sudoku.next()
+			if (!this.sudoku) {
+				console.log("No board loaded")
+				return 0
+			}
+			return this.sudoku.next()
 		}
 	},
 }

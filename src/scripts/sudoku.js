@@ -64,7 +64,7 @@ export class Sudoku {
 		return this.#board
 	}
 
-	updateDisplay(changes) {
+	update(changes) {
 		for (let c of changes) {
 			c.cand = Number(c.cand)
 			if (c.type === "rm") {
@@ -73,6 +73,7 @@ export class Sudoku {
 			} else if (c.type === "solved") {
 				this.#display.setCell(c.row, c.col, c.cand)
 				this.#board[c.row][c.col] = c.cand
+				this.#unsolvedCells--
 			}
 		}
 	}
@@ -91,38 +92,39 @@ export class Sudoku {
 			{tech: this.removeCandidatesSimple, name: "removeCandidatesSimple"},
 			{tech: this.checkSolvedCells, name: "checkSolvedCells"},
 		]
-
-		let iterations = 0
-		while (this.#unsolvedCells !== 0 ) {
-			console.log(iterations++)
+		if (this.#unsolvedCells !== 0 ) {
 			for (let tech of techs) {
-				console.log("applying", tech.name)
-				let out = tech.tech()
-				if (out) {
-					yield out
-					break
-				}
+				let changes = tech.tech(this)
+				console.debug("applying:", tech.name, "changes:", changes)
+				if (changes.length) {
+					return changes
+				} 
 			}
+			console.log("Can't solve with current techniques")
+			return 0
+		} else {
+			if (this.#unsolvedCells < 0) {
+				console.error("something very wrong happened, unsolved cells shouldn't go below 0")
+			}
+			// Run check if correctly solved
+			console.log("Done solving board.")
 		}
 	}
 
-	removeCandidatesSimple() {
-		let changes = removeCandidatesSimple(this)
-		if (changes.length === 0) { changes = 0 }
-		if (changes) {
-			console.log(changes)
-			this.updateDisplay(changes)
+	removeCandidatesSimple(sudokuObj = this) {
+		let changes = removeCandidatesSimple(sudokuObj)
+		if (changes.length) {
+			sudokuObj.update(changes)
 		}
 		return changes
 	}
 
-	checkSolvedCells() {
-		let changes = checkSolvedCells(this)
-		if (changes.length === 0) { changes = 0 }
-		if (changes) {
-			console.log(changes)
-			this.updateDisplay(changes)
+	checkSolvedCells(sudokuObj = this) {
+		let changes = checkSolvedCells(sudokuObj)
+		if (changes.length) {
+			sudokuObj.update(changes)
 		}
+		// should check if solves are valid, the invalid board example instantly sets 2 9s on the same row
 		return changes
 	}
 }
