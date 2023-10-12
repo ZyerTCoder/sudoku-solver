@@ -1,5 +1,5 @@
-import checkSolvedCells from "./checkSolvedCells.js"
-import removeCandidatesSimple from "./removeCandidatesSimple.js"
+import checkSolvedCells from "./techniques/checkSolvedCells.js"
+import removeCandidatesSimple from "./techniques/removeCandidatesSimple.js"
 
 const floor = Math.floor
 
