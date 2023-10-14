@@ -1,7 +1,25 @@
 let floor = Math.floor
 
+class SetOfDicts {
+	#set
+
+	constructor() {
+		this.dicts_array = []
+		this.#set = new Set()
+	}
+
+	add(d) {
+		let string_ver = JSON.stringify(d)
+		if (this.#set.has(string_ver)) { return }
+		else {
+			this.#set.add(string_ver)
+			this.dicts_array.push(d)
+		}
+	}
+}
+
 export default function removeCandidatesSimple(board) {
-	let out = []
+	let out = new SetOfDicts()
 
 	for (let row=0; row<9; row++) {
 		for (let col=0; col<9; col++) {
@@ -11,7 +29,7 @@ export default function removeCandidatesSimple(board) {
 					if (typeof(board.board[rr][col]) === "number") {
 						let cellValue = board.board[rr][col]
 						if (board.board[row][col][cellValue]) {
-							out.push({row:row, col:col, cand: cellValue, type:"rm"})
+							out.add({row:row, col:col, cand: cellValue, type:"rm"})
 						}
 					}
 				}
@@ -21,7 +39,7 @@ export default function removeCandidatesSimple(board) {
 					if (typeof(board.board[row][cc]) === "number") {
 						let cellValue = board.board[row][cc]
 						if (board.board[row][col][cellValue]) {
-							out.push({row:row, col:col, cand: cellValue, type:"rm"})
+							out.add({row:row, col:col, cand: cellValue, type:"rm"})
 						}
 					}
 				}
@@ -34,7 +52,7 @@ export default function removeCandidatesSimple(board) {
 						if (typeof(board.board[rr][cc]) === "number") {
 							let cellValue = board.board[rr][cc]
 							if (board.board[row][col][cellValue]) {
-								out.push({row:row, col:col, cand: cellValue, type:"rm"})
+								out.add({row:row, col:col, cand: cellValue, type:"rm"})
 							}
 						}
 					}
@@ -42,5 +60,5 @@ export default function removeCandidatesSimple(board) {
 			}
 		}
 	}
-	return out
+	return out.dicts_array
 }
