@@ -93,7 +93,10 @@ export default {
 			this.showModal = !this.showModal
 		},
 		startTest() {
-			// this.sudoku = new Sudoku(exampleSudokus[`Easy`], this.$refs.board)
+			this.sudoku = new Sudoku(
+				"1................................................................................"
+				, this.$refs.board)
+			this.sudoku.removeCandidatesSimple()
 		},
 		autoNext() {
 			let timer = 250
