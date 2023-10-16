@@ -71,4 +71,7 @@ export default {
 .candidate {
 	font-size: .8rem;
 }
+p {
+	user-select: none;
+}
 </style>

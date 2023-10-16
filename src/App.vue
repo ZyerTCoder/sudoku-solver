@@ -144,4 +144,8 @@ button {
 	border-radius: 4px;
 	width: 180px;
 }
+
+.consolas {
+	font-family: consolas;
+}
 </style>

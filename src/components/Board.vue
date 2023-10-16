@@ -1,10 +1,13 @@
 <template>
-	<div class="board">
-		<Cell
+	<div>
+		<div class="board">
+			<Cell
 			v-for="index in 81"
 			:key="index"
 			ref="cells"
-		/>
+			/>
+		</div>
+		<p class="consolas" @click="copyBoardString">{{ boardString }}</p>
 	</div>
 </template>
 
@@ -17,6 +20,7 @@ export default {
 	data () {
 		return {
 			title: "Sudoku Solver",
+			boardString: "",
 		}
 	},
 	mounted() {
@@ -44,9 +48,10 @@ export default {
 		},
 		setCellByIndex(index, value) {
 			this.$refs.cells[index].solved = value
+			this.boardString = this.getBoardString() || ".".repeat(81)
 		},
 		setCell(row, col, value) {
-			this.$refs.cells[row * 9 + col].solved = value
+			this.setCellByIndex(row * 9 + col, value)
 		},
 		// isCellSolved(row, col) {
 		// 	return this.$refs.cells[row * 9 + col].solved
@@ -80,8 +85,17 @@ export default {
 				}
 				cells[i].text_color = "#029dc4"
 			}
+			this.boardString =  ".".repeat(81)
 		},
-	}
+		copyBoardString() {
+			navigator.clipboard.writeText(this.getBoardString());
+			let temp = this.boardString
+			this.boardString = "copied to clipboard"
+			setTimeout(() => {
+				this.boardString = temp
+			}, 1000);
+		}
+	},
 }
 </script>
 
@@ -96,5 +110,16 @@ export default {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
+}
+
+p {
+	margin: 0;
+	font-size: .63rem;
+	user-select: none;
+	display: block;
+}
+
+p:hover {
+	text-decoration: underline;
 }
 </style>
