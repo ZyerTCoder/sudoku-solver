@@ -42,14 +42,14 @@ export default function* bruteforce(origBoard) {
 			loc--
 			if (loc < 0) {
 				console.log("Invalid board, could not solve")
-				return -1
+				return "invalid"
 			}
 
 			while (origBoard[floor(loc/9)][floor(loc%9)] != 0) {
 				loc--
 				if (loc < 0) {
 					console.log("Invalid board, could not solve")
-					return -1
+					return "invalid"
 					// throw new Error("Invalid board provided, no solutions found")
 				}
 			}

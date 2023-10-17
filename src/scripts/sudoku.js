@@ -105,13 +105,14 @@ export class Sudoku {
 				} 
 			}
 			console.log("Can't solve with current techniques")
-			return 0
+			return "no solve"
 		} else {
 			if (this.#unsolvedCells < 0) {
 				console.error("something very wrong happened, unsolved cells shouldn't go below 0")
 			}
 			// Run check if correctly solved
 			console.log("Done solving board.")
+			return 0
 		}
 	}
 
@@ -161,7 +162,7 @@ export function isGuessValid(board, guess, row, col) {
 }
 
 export function printBoard(board) {
-	if (board == -1) { return -1 }
+	if (board == "invalid") { return "invalid" }
 	board = board.join("").replaceAll(",", "").replaceAll("0", ".")
 	console.log(board)
 	for (let row = 0; row<81; row+=9) {
