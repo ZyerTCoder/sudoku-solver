@@ -1,6 +1,6 @@
 <template>
 	<!-- <h1>{{ title }}</h1> -->
-	<button @click="toggleModal()">Load sudoku</button>
+	<button @click="toggleLoadModal()">Load sudoku</button>
 	<button @click="bruteforceSudoku()" :disabled="running_timer[0]">
 		Brute-force
 	</button>
@@ -10,18 +10,24 @@
 	<button @click="autoNext()">Auto Step</button>
 	<Board ref="board" @start="startTest" /> <!-- TEMP - DELETE the @start -->
 	<Modal 
-		v-if="showModal"
-		@close="toggleModal"
+		v-if="showLoadModal"
+		@close="toggleLoadModal"
 		@load="loadSudoku"
 	>
 		<p>Paste your own or pick from the examples below</p>
 		<button 
 			class="modalButton" 
 			v-for="(value, key) in examples" 
-			@click="loadSudoku(value); toggleModal()"
+			@click="loadSudoku(value); toggleLoadModal()"
 		>
 			{{ key }}
 		</button>
+	</Modal>
+	<Modal
+		v-if="showMessageModal"
+		@close="toggleMessageModal"
+	>
+		<p>{{ message }}</p>
 	</Modal>
 </template>
 
@@ -41,7 +47,9 @@ export default {
 			title: "Sudoku Solver",
 			loop_timer: 16,
 			running_timer: [false],
-			showModal: false,
+			showLoadModal: false,
+			showMessageModal: false,
+			message: "",
 			examples: exampleSudokus,
 			// sudoku: new Sudoku()
 		}
@@ -61,17 +69,21 @@ export default {
 			
 			if (!boardDisplay.getBoardString()) {
 				console.log("No board loaded")
-				return -1
+				return 0
 			}
 
-			let bruteforceIterator = bruteforce(boardDisplay.getBoardString())
+			const bruteforceIterator = bruteforce(boardDisplay.getBoardString())
 			const setCell = boardDisplay.setCell
-			
+			const toggleMessageModal = this.toggleMessageModal
+
 			function iterateNextBrute() {
 				let bfIteration = bruteforceIterator.next()
 				if (!bfIteration.done) {
 					running_timer[0] = setTimeout(iterateNextBrute, timer)
 				} else {
+					if (bfIteration.value === -1) {
+						toggleMessageModal("This sudoku board is doesn't have solutions")
+					}
 					running_timer[0] = false
 					return 0
 				}
@@ -89,8 +101,12 @@ export default {
 			this.$refs.board.resetBoard()
 			this.sudoku = 0
 		},
-		toggleModal() {
-			this.showModal = !this.showModal
+		toggleLoadModal() {
+			this.showLoadModal = !this.showLoadModal
+		},
+		toggleMessageModal(message) {
+			this.message = message
+			this.showMessageModal = !this.showMessageModal
 		},
 		startTest() {
 			this.sudoku = new Sudoku(
@@ -104,8 +120,8 @@ export default {
 			let next = this.next
 
 			function takeStep() {
-				let notdone = next()
-				if (notdone) {
+				let result = next()
+				if (result) {
 					running_timer[0] = setTimeout(takeStep, timer)
 				}
 			}
@@ -116,7 +132,12 @@ export default {
 				console.log("No board loaded")
 				return 0
 			}
-			return this.sudoku.next()
+			let result = this.sudoku.next()
+			if (result === "no solve") {
+				this.toggleMessageModal("Can't solve this board with current techniques")
+				return 0
+			}
+			return result
 		}
 	},
 }
@@ -148,4 +169,9 @@ button {
 .consolas {
 	font-family: consolas;
 }
+
+p {
+	margin: 0;
+}
+
 </style>
