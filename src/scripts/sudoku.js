@@ -67,24 +67,34 @@ export class Sudoku {
 	update(changes) {
 		for (let c of changes) {
 			c.cand = Number(c.cand)
-			if (c.type === "rm") {
-				this.#board[c.row][c.col][c.cand] = false
-				if (this.#display) {
-					this.#display.removeCandidateFromCell(c.row, c.col, c.cand)
-				}
-			} else if (c.type === "solved") {
-				this.#board[c.row][c.col] = c.cand
-				this.#unsolvedCells--
-				if (this.#display) {
-					this.#display.setCell(c.row, c.col, c.cand)
-				}
+			switch(c.type) {
+				case "rm":
+					this.#board[c.row][c.col][c.cand] = false
+					if (this.#display) {
+						this.#display.removeCandidateFromCell(c.row, c.col, c.cand)
+					}
+					break
+				case "solved":
+					this.#board[c.row][c.col] = c.cand
+					this.#unsolvedCells--
+					if (this.#display) {
+						this.#display.setCell(c.row, c.col, c.cand)
+					}
+					break
+				case "error":
+					break //TODO HANDLE HIGHLIGHTING
+				default:
+					console.error("UNHANDLED CASE", c)
 			}
 		}
 	}
 
 	isCellSolved(row, col) {
-		let cell_type = typeof(this.#board[row][col])
-		return cell_type === "number"
+		let cell_contents = this.#board[row][col]
+		if (typeof(cell_contents) === "number") {
+			return cell_contents
+		}
+		return false
 	}
 
 	isCellUnsolved(row, col) {
@@ -100,20 +110,86 @@ export class Sudoku {
 			for (let tech of techs) {
 				let changes = tech.tech(this)
 				console.debug("applying:", tech.name, "changes:", changes)
+				if (tech.name === "checkSolvedCells") {
+					let errors = this.areThereErrors()
+					if (errors.length) {
+						this.update(errors)
+						return "invalid"
+					}
+				}
 				if (changes.length) {
 					return changes
 				} 
 			}
 			console.log("Can't solve with current techniques")
-			return "no solve"
+			return "no tech"
 		} else {
 			if (this.#unsolvedCells < 0) {
 				console.error("something very wrong happened, unsolved cells shouldn't go below 0")
 			}
 			// Run check if correctly solved
 			console.log("Done solving board.")
+			let errors = this.areThereErrors()
+			if (errors.length) {
+				console.log(errors)
+				this.update(errors)
+				return "invalid"
+			}
 			return 0
 		}
+	}
+
+	areThereErrors(sudokuObj = this) {
+		let cell_value
+		for (let r=0; r<9; r++) {
+			let set = {}
+			for (let c=0; c<9; c++) {
+				if (cell_value = sudokuObj.isCellSolved(r, c)) {
+					if (set[cell_value]) {
+						return [
+							set[cell_value],
+							{row:r, col:c, cand: 0, type:"error"}
+						]
+					}
+					set[cell_value] = {row:r, col:c, cand: 0, type:"error"}
+				}
+			}
+		}
+
+		for (let c=0; c<9; c++) {
+			let set = {}
+			for (let r=0; r<9; r++) {
+				if (cell_value = sudokuObj.isCellSolved(r, c)) {
+					if (set[cell_value]) {
+						return [
+							set[cell_value],
+							{row:r, col:c, cand: 0, type:"error"}
+						]
+					}
+					set[cell_value] = {row:r, col:c, cand: 0, type:"error"}
+				}
+			}
+		}
+		
+		for (let b=0; b<9; b++) {
+			let set = {}
+			let x = floor(b/3)
+			let y = floor(b%3)
+			for (let r=x*3; r<x*3+3; r++) {
+				for (let c=y*3; c<y*3+3; c++) {
+					if (cell_value = sudokuObj.isCellSolved(r, c)) {
+						if (set[cell_value]) {
+							return [
+								set[cell_value],
+								{row:r, col:c, cand: 0, type:"error"}
+							]
+						}
+						set[cell_value] = {row:r, col:c, cand: 0, type:"error"}
+					}
+				}
+			}
+		}
+		return []
 	}
 
 	removeCandidatesSimple(sudokuObj = this) {
@@ -129,7 +205,6 @@ export class Sudoku {
 		if (changes.length) {
 			sudokuObj.update(changes)
 		}
-		// should check if solves are valid, the invalid board example instantly sets 2 9s on the same row
 		return changes
 	}
 }
@@ -162,7 +237,7 @@ export function isGuessValid(board, guess, row, col) {
 }
 
 export function printBoard(board) {
-	if (board == "invalid") { return "invalid" }
+	if (typeof(board) === "string") { return board }
 	board = board.join("").replaceAll(",", "").replaceAll("0", ".")
 	console.log(board)
 	for (let row = 0; row<81; row+=9) {
@@ -171,8 +246,4 @@ export function printBoard(board) {
 			console.log("---+---+---")
 		}
 	}
-}
-
-export function isSudokuBoard(board) {
-	console.log(typeof(board))
 }

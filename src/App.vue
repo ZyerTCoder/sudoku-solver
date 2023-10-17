@@ -59,7 +59,7 @@ export default {
 			if (typeof(board) !== "string" || board.length !== 81) {
 				return console.warn("Tried to load invalid sudoku:", board)
 			}
-			
+			this.resetBoard()
 			this.sudoku = new Sudoku(board, this.$refs.board)
 		},
 		bruteforceSudoku() {
@@ -81,8 +81,8 @@ export default {
 				if (!bfIteration.done) {
 					running_timer[0] = setTimeout(iterateNextBrute, timer)
 				} else {
-					if (bfIteration.value === -1) {
-						toggleMessageModal("This sudoku board is doesn't have solutions")
+					if (bfIteration.value === "invalid") {
+						toggleMessageModal("This sudoku board doesn't have a solution")
 					}
 					running_timer[0] = false
 					return 0
@@ -110,7 +110,7 @@ export default {
 		},
 		startTest() {
 			this.sudoku = new Sudoku(
-				"1................................................................................"
+				exampleSudokus["Solved Board"]
 				, this.$refs.board)
 			this.sudoku.removeCandidatesSimple()
 		},
@@ -133,8 +133,11 @@ export default {
 				return 0
 			}
 			let result = this.sudoku.next()
-			if (result === "no solve") {
+			if (result === "no tech") {
 				this.toggleMessageModal("Can't solve this board with current techniques")
+				return 0
+			} else if (result === "invalid") {
+				this.toggleMessageModal("This sudoku board doesn't have a solution")
 				return 0
 			}
 			return result
