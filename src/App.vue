@@ -6,9 +6,12 @@
 	</button>
 	<!-- :disabled="!sudoku" bits give a warning on load, find alternative -->
 	<button @click="resetBoard()">Reset Board</button>
-	<button @click="next()">Next Step</button>
-	<button @click="autoNext()">Auto Step</button>
-	<Board ref="board" @start="startTest" /> <!-- TEMP - DELETE the @start -->
+	<button @click="next()" :disabled="running_timer[0]">Next Step</button>
+	<button @click="autoNext()" :disabled="running_timer[0]">Auto Step</button>
+	<div class="sidebyside">
+		<Board ref="board" @start="startTest" /> <!-- TEMP - DELETE the @start -->
+		<List ref="techList"/>
+	</div>
 	<Modal 
 		v-if="showLoadModal"
 		@close="toggleLoadModal"
@@ -34,6 +37,7 @@
 <script>
 import Board from "./components/Board.vue"
 import Modal from "./components/Modal.vue"
+import List from "./components/List.vue"
 
 import bruteforce from "./scripts/bruteforce.js"
 import exampleSudokus from "./scripts/exampleSudokus.js"
@@ -41,7 +45,7 @@ import {Sudoku} from "./scripts/sudoku.js"
 
 export default {
 	name: 'App',
-	components: { Board, Modal },
+	components: { Board, Modal, List},
 	data () {
 		return {
 			title: "Sudoku Solver",
@@ -51,7 +55,6 @@ export default {
 			showMessageModal: false,
 			message: "",
 			examples: exampleSudokus,
-			// sudoku: new Sudoku()
 		}
 	},
 	methods: {
@@ -59,8 +62,8 @@ export default {
 			if (typeof(board) !== "string" || board.length !== 81) {
 				return console.warn("Tried to load invalid sudoku:", board)
 			}
-			this.resetBoard()
-			this.sudoku = new Sudoku(board, this.$refs.board)
+			this.sudoku.reset()
+			this.sudoku = new Sudoku(board, this.$refs.board, this.$refs.techList)
 		},
 		bruteforceSudoku() {
 			const boardDisplay = this.$refs.board
@@ -108,10 +111,11 @@ export default {
 			this.message = message
 			this.showMessageModal = !this.showMessageModal
 		},
-		startTest() {
+		startTest() { // TEMP - DELETE
 			this.sudoku = new Sudoku(
-				exampleSudokus["Solved Board"]
-				, this.$refs.board)
+				exampleSudokus["Solved Board"],
+				this.$refs.board,
+				this.$refs.techList)
 			this.sudoku.removeCandidatesSimple()
 		},
 		autoNext() {
@@ -175,6 +179,14 @@ button {
 
 p {
 	margin: 0;
+}
+
+.sidebyside {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	margin: 0;
+	padding: 0;
 }
 
 </style>

@@ -22,9 +22,22 @@ export class Sudoku {
 	#board
 	#unsolvedCells
 	#display
+	#techList
 	#changesStack = []
+	techs = [
+		{
+			tech: this.removeCandidatesSimple,
+			name: "removeCandidatesSimple",
+			displayName: "Remove candidates",
+			enabled: true,},
+		{
+			tech: this.checkSolvedCells,
+			name: "checkSolvedCells",
+			displayName: "Check solved cellsasdasdasd",
+			enabled: true,},
+	]
 
-	constructor(sudokuString, boardComponent) {
+	constructor(sudokuString, boardComponent, techList) {
 		this.#board = stringToMatrix(sudokuString)
 		this.#unsolvedCells = 81
 
@@ -39,6 +52,18 @@ export class Sudoku {
 					this.#display.setCellTextColor(i, "#c40f02")
 				}
 			}
+		} else {
+			console.warn("No board component given to sudoku object")
+		}
+
+		if (techList) {
+			this.#techList = techList
+			this.#techList.clear()
+			for (let tech of this.techs) {
+				this.#techList.techs.push(tech)
+			}
+		} else {
+			console.warn("No list component given to sudoku object")
 		}
 
 		for (let row=0; row<9; row++) {
@@ -101,33 +126,13 @@ export class Sudoku {
 		return !this.isCellSolved(row, col)
 	}
 
-	next() {
-		const techs = [
-			{tech: this.removeCandidatesSimple, name: "removeCandidatesSimple"},
-			{tech: this.checkSolvedCells, name: "checkSolvedCells"},
-		]
-		if (this.#unsolvedCells !== 0 ) {
-			for (let tech of techs) {
-				let changes = tech.tech(this)
-				console.debug("applying:", tech.name, "changes:", changes)
-				if (tech.name === "checkSolvedCells") {
-					let errors = this.areThereErrors()
-					if (errors.length) {
-						this.update(errors)
-						return "invalid"
-					}
-				}
-				if (changes.length) {
-					return changes
-				} 
-			}
-			console.log("Can't solve with current techniques")
-			return "no tech"
-		} else {
-			if (this.#unsolvedCells < 0) {
-				console.error("something very wrong happened, unsolved cells shouldn't go below 0")
-			}
-			// Run check if correctly solved
+	reset() {
+		if (this.#display) { this.#display.resetBoard() }
+		if (this.#techList) { this.#techList.removeHighlight() }
+	}
+
+	next(sudokuObj = this) {
+		if (this.#unsolvedCells === 0 ) {
 			console.log("Done solving board.")
 			let errors = this.areThereErrors()
 			if (errors.length) {
@@ -137,6 +142,32 @@ export class Sudoku {
 			}
 			return 0
 		}
+
+		if (this.#unsolvedCells < 0) {
+			console.error("something very wrong happened, unsolved cells shouldn't go below 0")
+		}
+		
+		for (let tech of sudokuObj.techs) {
+			let changes = tech.tech(this)
+			console.debug("applying:", tech.name, "changes:", changes)
+
+			if (tech.name === "checkSolvedCells") {
+				let errors = this.areThereErrors()
+				if (errors.length) {
+					this.update(errors)
+					return "invalid"
+				}
+			}
+
+			if (changes.length) {
+				if (this.#techList) {
+					this.#techList.highlight(tech.name)
+				}
+				return changes
+			} 
+		}
+		console.log("Can't solve with current techniques")
+		return "no tech"
 	}
 
 	areThereErrors(sudokuObj = this) {
