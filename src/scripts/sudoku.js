@@ -1,11 +1,12 @@
 import checkSolvedCells from "./techniques/checkSolvedCells.js"
 import removeCandidatesSimple from "./techniques/removeCandidatesSimple.js"
+import hiddenSingles from "./techniques/hiddenSingles.js"
 
 const floor = Math.floor
 
 export function stringToMatrix(inp) {
 	if (typeof(inp) !== "string" || inp.length !== 81) {
-		throw TypeError("Input doesn't fit a sudoku string")
+		throw TypeError(`Input doesn't fit a sudoku string, type: ${typeof(inp)} length:${inp && inp.length}`)
 	}
 	inp = inp.replaceAll(/[^\d]/g, "0")
 	let board = []
@@ -33,7 +34,12 @@ export class Sudoku {
 		{
 			tech: this.checkSolvedCells,
 			name: "checkSolvedCells",
-			displayName: "Check solved cellsasdasdasd",
+			displayName: "Check solved cells",
+			enabled: true,},
+		{
+			tech: this.hiddenSingles,
+			name: "hiddenSingles",
+			displayName: "Hidden singles",
 			enabled: true,},
 	]
 
@@ -123,7 +129,11 @@ export class Sudoku {
 	}
 
 	isCellUnsolved(row, col) {
-		return !this.isCellSolved(row, col)
+		let cell_contents = this.#board[row][col]
+		if (typeof(cell_contents) !== "number") {
+			return cell_contents
+		}
+		return false
 	}
 
 	reset() {
@@ -151,7 +161,7 @@ export class Sudoku {
 			let changes = tech.tech(this)
 			console.debug("applying:", tech.name, "changes:", changes)
 
-			if (tech.name === "checkSolvedCells") {
+			if (tech.name === "checkSolvedCells" || tech.name === "hiddenSingles") {
 				let errors = this.areThereErrors()
 				if (errors.length) {
 					this.update(errors)
@@ -233,6 +243,14 @@ export class Sudoku {
 
 	checkSolvedCells(sudokuObj = this) {
 		let changes = checkSolvedCells(sudokuObj)
+		if (changes.length) {
+			sudokuObj.update(changes)
+		}
+		return changes
+	}
+
+	hiddenSingles(sudokuObj = this) {
+		let changes = hiddenSingles(sudokuObj)
 		if (changes.length) {
 			sudokuObj.update(changes)
 		}
