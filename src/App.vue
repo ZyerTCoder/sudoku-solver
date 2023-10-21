@@ -62,7 +62,9 @@ export default {
 			if (typeof(board) !== "string" || board.length !== 81) {
 				return console.warn("Tried to load invalid sudoku:", board)
 			}
-			this.sudoku.reset()
+			if (this.sudoku) {
+				this.sudoku.reset()
+			}
 			this.sudoku = new Sudoku(board, this.$refs.board, this.$refs.techList)
 		},
 		bruteforceSudoku() {
@@ -113,10 +115,10 @@ export default {
 		},
 		startTest() { // TEMP - DELETE
 			this.sudoku = new Sudoku(
-				exampleSudokus["Solved Board"],
+				exampleSudokus["NYI Hidden Singles"],
 				this.$refs.board,
 				this.$refs.techList)
-			this.sudoku.removeCandidatesSimple()
+			// this.sudoku.removeCandidatesSimple()
 		},
 		autoNext() {
 			let timer = 250
