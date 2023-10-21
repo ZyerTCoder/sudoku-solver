@@ -115,7 +115,7 @@ export default {
 		},
 		startTest() { // TEMP - DELETE
 			this.sudoku = new Sudoku(
-				exampleSudokus["NYI Hidden Singles"],
+				exampleSudokus["Hidden Singles"],
 				this.$refs.board,
 				this.$refs.techList)
 			// this.sudoku.removeCandidatesSimple()
