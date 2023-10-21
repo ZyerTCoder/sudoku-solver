@@ -88,7 +88,7 @@ export default {
 			this.boardString =  ".".repeat(81)
 		},
 		copyBoardString() {
-			navigator.clipboard.writeText(this.getBoardString());
+			navigator.clipboard.writeText(this.getBoardString() || ".".repeat(81));
 			let temp = this.boardString
 			this.boardString = "copied to clipboard"
 			setTimeout(() => {
