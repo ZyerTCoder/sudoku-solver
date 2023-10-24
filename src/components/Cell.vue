@@ -6,19 +6,21 @@
 		>
 			{{ solved }}
 		</p>
-		<div 
-			class="candidates"
+		<CellCandidate
 			v-if="!solved"
-			v-for="(cand, i) in candidates"
-		>
-			<p class="candidate" v-if="cand">{{ i }}</p>
-		</div>
+			v-for="(i, cand) of candidates"
+			ref="cands"
+			:candidate="i && cand"
+		/>
 	</div>
 </template>
 
 <script>
+import CellCandidate from './CellCandidate.vue'
+
 export default {
 	name: "Cell",
+	components: { CellCandidate },
 	data () {
 		return {
 			solved: 0,
@@ -30,6 +32,16 @@ export default {
 			bottom_border: "0px",
 			left_border: "0px",
 			text_color: "#029dc4",
+		}
+	},
+	methods: {
+		reset() {
+			if (this.$refs.cands.length) {
+				for (let c=0; c<9; c++) {
+					this.$refs.cands[c].background = "white"
+				}
+			}
+			this.solved = 0
 		}
 	},
 	computed: {

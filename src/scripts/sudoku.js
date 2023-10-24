@@ -24,6 +24,7 @@ export class Sudoku {
 	#unsolvedCells
 	#display
 	#techList
+	#highlightedChanges
 	#changesStack = []
 	techs = [
 		{
@@ -96,7 +97,10 @@ export class Sudoku {
 	}
 
 	update(changes) {
-		for (let c of changes) {
+		if (this.#techList) {
+			this.#techList.highlight(changes.tech)
+		}
+		for (let c of changes.changes) {
 			c.cand = Number(c.cand)
 			switch(c.type) {
 				case "rm":
@@ -143,10 +147,10 @@ export class Sudoku {
 
 	next(sudokuObj = this) {
 		if (this.#unsolvedCells === 0 ) {
-			console.log("Done solving board.")
+			console.debug("Done solving board.")
 			let errors = this.areThereErrors()
 			if (errors.length) {
-				console.log(errors)
+				console.log("errors", errors)
 				this.update(errors)
 				return "invalid"
 			}
@@ -156,32 +160,53 @@ export class Sudoku {
 		if (this.#unsolvedCells < 0) {
 			console.error("something very wrong happened, unsolved cells shouldn't go below 0")
 		}
-		
-		for (let tech of sudokuObj.techs) {
-			let changes = tech.tech(sudokuObj)
 
-			if (changes.length) {
+		// apply highlighted changes if there are any
+		if (this.#display && this.#highlightedChanges) {
+			let changes = this.#highlightedChanges
+			this.#highlightedChanges = false
 			sudokuObj.update(changes)
-		}
-
-			// console.debug("applying:", tech.name, "changes:", changes)
-
-			if (tech.name === "checkSolvedCells" || tech.name === "hiddenSingles") {
+			if (changes.tech === "checkSolvedCells" || changes.tech === "hiddenSingles") {
 				let errors = this.areThereErrors()
 				if (errors.length) {
-					this.update(errors)
+					this.update({changes: errors, tech: "error"}) // TODO error highlighting
 					return "invalid"
 				}
 			}
+			return {changes: changes.changes, tech: changes.name}
+		}
 
-			if (changes.length) {
+		for (let tech of sudokuObj.techs) {
+			// console.debug("applying:", tech.name, "changes:", changes)
+			let changes = tech.tech(sudokuObj)
+
+			if (!changes.length) {
+				continue
+			}
+			
+			// if there is a display to highlight then do that
+			if (this.#display && !this.#highlightedChanges && changes.length && tech.name !== "removeCandidatesSimple") {
+				this.#highlightedChanges = {changes: changes, tech: tech.name}
+				this.#display.highlight(changes)
 				if (this.#techList) {
 					this.#techList.highlight(tech.name)
 				}
+				return {changes: changes, tech: tech.name, highlighting: true}
+			}
+
+			if (changes.length) {
+				sudokuObj.update({changes: changes, tech: tech.name})
+				if (tech.name === "checkSolvedCells" || tech.name === "hiddenSingles") {
+					let errors = this.areThereErrors()
+					if (errors.length) {
+						this.update({changes: changes, tech: "error"}) // TODO error highlighting
+						return "invalid"
+					}
+				}
 				return {changes: changes, tech: tech.name}
-			} 
+			} 			
 		}
-		console.log("Can't solve with current techniques")
+		console.log("Can't solve with current techniquess")
 		return "no tech"
 	}
 

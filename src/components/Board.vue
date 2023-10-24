@@ -84,6 +84,7 @@ export default {
 					7: true, 8: true, 9: true,
 				}
 				cells[i].text_color = "#029dc4"
+				cells[i].reset()
 			}
 			this.boardString =  ".".repeat(81)
 		},
@@ -94,6 +95,29 @@ export default {
 			setTimeout(() => {
 				this.boardString = temp
 			}, 1000);
+		},
+		setCellCandidateColor(row, col, cand, color) {
+			this.$refs.cells[row * 9 + col].$refs.cands[cand-1].background = color
+		},
+		highlight(changes) {
+			for (let c of changes) {
+				c.cand = Number(c.cand)
+				switch(c.type) {
+					case "rm":
+						break
+					case "solved":
+						this.setCellCandidateColor(c.row, c.col, c.cand, "#71c971")
+						break
+					case "error":
+						break //TODO HANDLE HIGHLIGHTING
+					default:
+						console.error("UNHANDLED CASE", c)
+				}
+		}
+		},
+		removeHighlight() {
+			// TODO
+			// save previous changes and remove those specifically
 		}
 	},
 }
