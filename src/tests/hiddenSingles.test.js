@@ -1,11 +1,11 @@
 import { Sudoku } from "../scripts/sudoku"
 import { expect, test } from "vitest"
 import hiddenSingles from "../scripts/techniques/hiddenSingles"
+import removeCandidatesSimple from "../scripts/techniques/removeCandidatesSimple"
 
 test("hiddenSingles: in row", () => {
 	const sudoku = new Sudoku(".........2........3..........1..........................1........................")
-	let arr = sudoku.next()
-	expect(arr.tech).toBe("removeCandidatesSimple")
+	sudoku.update({changes:removeCandidatesSimple(sudoku)})
 	let changes = hiddenSingles(sudoku)
 	expect(changes.length).toBe(1)
 	changes = JSON.stringify(changes)
@@ -14,8 +14,7 @@ test("hiddenSingles: in row", () => {
 
 test("hiddenSingles: in col", () => {
 	const sudoku = new Sudoku(".234567........................................................................11")
-	let arr = sudoku.next()
-	expect(arr.tech).toBe("removeCandidatesSimple")
+	sudoku.update({changes:removeCandidatesSimple(sudoku)})
 	let changes = hiddenSingles(sudoku)
 	expect(changes.length).toBe(1)
 	changes = JSON.stringify(changes)
@@ -24,8 +23,7 @@ test("hiddenSingles: in col", () => {
 
 test("hiddenSingles: in box", () => {
 	const sudoku = new Sudoku("............1........1......11...................................................")
-	let arr = sudoku.next()
-	expect(arr.tech).toBe("removeCandidatesSimple")
+	sudoku.update({changes:removeCandidatesSimple(sudoku)})
 	let changes = hiddenSingles(sudoku)
 	expect(changes.length).toBe(1)
 	changes = JSON.stringify(changes)
@@ -34,8 +32,7 @@ test("hiddenSingles: in box", () => {
 
 test("hiddenSingles: in row col box", () => {
 	const sudoku = new Sudoku(".................1.......1.......1.......1.......1.......1.......1.......1.......")
-	let arr = sudoku.next()
-	expect(arr.tech).toBe("removeCandidatesSimple")
+	sudoku.update({changes:removeCandidatesSimple(sudoku)})
 	let changes = hiddenSingles(sudoku)
 	expect(changes.length).toBe(1)
 	changes = JSON.stringify(changes)

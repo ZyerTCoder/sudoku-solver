@@ -23,9 +23,9 @@ test("E2E: Invalid board", () => {
 	do {
 		result = sudoku.next()
 		iterations++
-		if (result === "no tech") { break }
+		if (result === "invalid") { break }
 	} while (result && iterations < IterationCap)
-	expect(result).toBe("no tech")
+	expect(result).toBe("invalid")
 	expect(iterations).toBeLessThan(IterationCap)
 })
 
@@ -41,3 +41,15 @@ test("E2E: Hidden Singles", () => {
 	expect(result).toBe(0)
 })
 
+test("E2E: 2 Solutions", () => {
+	const sudoku = new Sudoku(exampleSudokus["2 Solutions"])
+	let result
+	let iterations = 0
+	do {
+		result = sudoku.next()
+		iterations++
+		if (result === "no tech") { break }
+	} while (result && iterations < IterationCap)
+	expect(iterations).toBeLessThan(IterationCap)
+	expect(result).toBe("no tech")
+})
