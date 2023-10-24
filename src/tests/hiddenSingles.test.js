@@ -3,6 +3,8 @@ import { expect, test } from "vitest"
 import hiddenSingles from "../scripts/techniques/hiddenSingles"
 import removeCandidatesSimple from "../scripts/techniques/removeCandidatesSimple"
 
+// MCR : Manual Candidate Removal
+
 test("hiddenSingles: in row", () => {
 	const sudoku = new Sudoku(".........2........3..........1..........................1........................")
 	sudoku.update({changes:removeCandidatesSimple(sudoku)})
@@ -45,4 +47,54 @@ test("hiddenSingles: doesnt remove from empty sudoku", () => {
 	expect(changes.length).toBe(0)
 	changes = JSON.stringify(changes)
 	expect(changes).toBe(`[]`)
+})
+
+test("hiddenSingles: in row MCR", () => {
+	const sudoku = new Sudoku(".................................................................................")
+	for (let col = 1; col<9; col++) {
+		sudoku.testingSetCandidatesOnCell(0, col, {
+			1: false, 2: true, 3: true,
+			4: true, 5: true, 6: true,
+			7: true, 8: true, 9: true,
+		})
+	}
+	let changes = hiddenSingles(sudoku)
+	expect(changes.length).toBe(1)
+	expect(changes).toStrictEqual([{"row":0,"col":0,"cand":1,"type":"solved","reason":"unique in row"}])
+})
+
+test("hiddenSingles: in col MCR", () => {
+	const sudoku = new Sudoku(".................................................................................")
+	for (let row=1; row<9; row++) {
+		sudoku.testingSetCandidatesOnCell(row, 0, {
+			1: false, 2: true, 3: true,
+			4: true, 5: true, 6: true,
+			7: true, 8: true, 9: true,
+		})
+	}
+	let changes = hiddenSingles(sudoku)
+	expect(changes.length).toBe(1)
+	expect(changes).toStrictEqual([{"row":0,"col":0,"cand":1,"type":"solved","reason":"unique in col"}])
+})
+
+test("hiddenSingles: in box MCR", () => {
+	const sudoku = new Sudoku(".................................................................................")
+	for (let row=1; row<3; row++) {
+		sudoku.testingSetCandidatesOnCell(row, 0, {
+			1: false, 2: true, 3: true,
+			4: true, 5: true, 6: true,
+			7: true, 8: true, 9: true,
+		})
+	}
+	for (let row=0; row<3; row++) {
+		for (let col=1; col<3; col++)
+		sudoku.testingSetCandidatesOnCell(row, col, {
+			1: false, 2: true, 3: true,
+			4: true, 5: true, 6: true,
+			7: true, 8: true, 9: true,
+		})
+	}
+	let changes = hiddenSingles(sudoku)
+	expect(changes.length).toBe(1)
+	expect(changes).toStrictEqual([{"row":0,"col":0,"cand":1,"type":"solved","reason":"unique in box"}])
 })

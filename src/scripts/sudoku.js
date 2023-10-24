@@ -254,6 +254,10 @@ export class Sudoku {
 		}
 		return []
 	}
+
+	testingSetCandidatesOnCell(row, col, candidates) {
+		this.#board[row][col] = candidates
+	}
 }
 
 
