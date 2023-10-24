@@ -29,3 +29,5 @@ coverage
 src/scripts/runBruteCL.js
 updateGithubPages.bat
 src/scripts/runSmartCL.js
+todos.txt
+src/todos.txt
