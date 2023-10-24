@@ -160,19 +160,18 @@ export class Sudoku {
 		if (this.#unsolvedCells < 0) {
 			console.error("something very wrong happened, unsolved cells shouldn't go below 0")
 		}
+		
+		let errors = this.areThereErrors()
+		if (errors.length) {
+			this.update({changes: errors, tech: "error"}) // TODO error highlighting
+			return "invalid"
+		}
 
 		// apply highlighted changes if there are any
 		if (this.#display && this.#highlightedChanges) {
 			let changes = this.#highlightedChanges
 			this.#highlightedChanges = false
 			sudokuObj.update(changes)
-			if (changes.tech === "checkSolvedCells" || changes.tech === "hiddenSingles") {
-				let errors = this.areThereErrors()
-				if (errors.length) {
-					this.update({changes: errors, tech: "error"}) // TODO error highlighting
-					return "invalid"
-				}
-			}
 			return {changes: changes.changes, tech: changes.name}
 		}
 
@@ -196,13 +195,6 @@ export class Sudoku {
 
 			if (changes.length) {
 				sudokuObj.update({changes: changes, tech: tech.name})
-				if (tech.name === "checkSolvedCells" || tech.name === "hiddenSingles") {
-					let errors = this.areThereErrors()
-					if (errors.length) {
-						this.update({changes: changes, tech: "error"}) // TODO error highlighting
-						return "invalid"
-					}
-				}
 				return {changes: changes, tech: tech.name}
 			} 			
 		}

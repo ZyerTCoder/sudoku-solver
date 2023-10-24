@@ -62,6 +62,7 @@ export default {
 			if (typeof(board) !== "string" || board.length !== 81) {
 				return console.warn("Tried to load invalid sudoku:", board)
 			}
+			this.resetBoard()
 			if (this.sudoku) {
 				this.sudoku.reset()
 			}
@@ -156,7 +157,7 @@ export default {
 #app {
 	margin: 0 auto;
 	text-align: center;
-	font-family: Calibri;
+	font-family: Calibri, Verdana;
 }
 h1 {
 	display: flex;
@@ -176,7 +177,7 @@ button {
 }
 
 .consolas {
-	font-family: consolas;
+	font-family: consolas, monospace;
 }
 
 p {
