@@ -27,17 +27,17 @@ export class Sudoku {
 	#changesStack = []
 	techs = [
 		{
-			tech: this.removeCandidatesSimple,
+			tech: removeCandidatesSimple,
 			name: "removeCandidatesSimple",
 			displayName: "Remove candidates",
 			enabled: true,},
 		{
-			tech: this.checkSolvedCells,
+			tech: checkSolvedCells,
 			name: "checkSolvedCells",
 			displayName: "Check solved cells",
 			enabled: true,},
 		{
-			tech: this.hiddenSingles,
+			tech: hiddenSingles,
 			name: "hiddenSingles",
 			displayName: "Hidden singles",
 			enabled: true,},
@@ -158,8 +158,13 @@ export class Sudoku {
 		}
 		
 		for (let tech of sudokuObj.techs) {
-			let changes = tech.tech(this)
-			console.debug("applying:", tech.name, "changes:", changes)
+			let changes = tech.tech(sudokuObj)
+
+			if (changes.length) {
+			sudokuObj.update(changes)
+		}
+
+			// console.debug("applying:", tech.name, "changes:", changes)
 
 			if (tech.name === "checkSolvedCells" || tech.name === "hiddenSingles") {
 				let errors = this.areThereErrors()
@@ -173,7 +178,7 @@ export class Sudoku {
 				if (this.#techList) {
 					this.#techList.highlight(tech.name)
 				}
-				return changes
+				return {changes: changes, tech: tech.name}
 			} 
 		}
 		console.log("Can't solve with current techniques")
@@ -231,30 +236,6 @@ export class Sudoku {
 			}
 		}
 		return []
-	}
-
-	removeCandidatesSimple(sudokuObj = this) {
-		let changes = removeCandidatesSimple(sudokuObj)
-		if (changes.length) {
-			sudokuObj.update(changes)
-		}
-		return changes
-	}
-
-	checkSolvedCells(sudokuObj = this) {
-		let changes = checkSolvedCells(sudokuObj)
-		if (changes.length) {
-			sudokuObj.update(changes)
-		}
-		return changes
-	}
-
-	hiddenSingles(sudokuObj = this) {
-		let changes = hiddenSingles(sudokuObj)
-		if (changes.length) {
-			sudokuObj.update(changes)
-		}
-		return changes
 	}
 }
 
