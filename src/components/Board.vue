@@ -74,6 +74,9 @@ export default {
 		removeCandidateFromCell(row, col, candidate) {
 			this.$refs.cells[row * 9 + col].candidates[candidate] = false
 		},
+		addCandidateToCell(row, col, candidate) {
+			this.$refs.cells[row * 9 + col].candidates[candidate] = true
+		},
 		resetBoard() {
 			let cells = this.$refs.cells
 			for (let i in cells) {

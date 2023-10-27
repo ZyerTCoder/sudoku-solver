@@ -1,6 +1,7 @@
 import checkSolvedCells from "./techniques/checkSolvedCells.js"
 import removeCandidatesSimple from "./techniques/removeCandidatesSimple.js"
 import hiddenSingles from "./techniques/hiddenSingles.js"
+import nakedPairs from "./techniques/nakedPairs.js"
 
 const floor = Math.floor
 
@@ -31,22 +32,59 @@ export class Sudoku {
 			tech: removeCandidatesSimple,
 			name: "removeCandidatesSimple",
 			displayName: "Remove candidates",
-			enabled: true,},
+			enabled: true,
+		},
 		{
 			tech: checkSolvedCells,
 			name: "checkSolvedCells",
 			displayName: "Check solved cells",
-			enabled: true,},
+			enabled: true,
+		},
 		{
 			tech: hiddenSingles,
 			name: "hiddenSingles",
 			displayName: "Hidden singles",
-			enabled: true,},
+			enabled: true,
+		},
+		{
+			tech: nakedPairs,
+			name: "nakedPairs",
+			displayName: "Naked Pairs",
+			enabled: true,
+		},
 	]
 
 	constructor(sudokuString, boardComponent, techList) {
-		this.#board = stringToMatrix(sudokuString)
-		this.#unsolvedCells = 81
+		if (sudokuString === "TEST_NO_CANDIDATES") {
+			this.#board = []
+			for (let row=0; row<9; row++) {
+				this.#board[row] = []
+				for (let col=0; col<9; col++) {
+					this.#board[row][col] = {
+						1: false, 2: false, 3: false,
+						4: false, 5: false, 6: false,
+						7: false, 8: false, 9: false,
+					}
+				}
+			}
+		} else {
+			this.#board = stringToMatrix(sudokuString)
+			this.#unsolvedCells = 81
+			
+			for (let row=0; row<9; row++) {
+				for (let col=0; col<9; col++) {
+					if (this.#board[row][col] == 0) {
+						this.#board[row][col] = {
+							1: true, 2: true, 3: true,
+							4: true, 5: true, 6: true,
+							7: true, 8: true, 9: true,
+						}
+					} else {
+						this.#unsolvedCells--
+					}
+				}
+			}
+		}
 
 		if (boardComponent) {
 			this.#display = boardComponent
@@ -57,6 +95,15 @@ export class Sudoku {
 				if (n) {
 					this.#display.setCellByIndex(i, n)
 					this.#display.setCellTextColor(i, "#c40f02")
+				}
+				if (sudokuString === "TEST_NO_CANDIDATES") {
+					for (let row=0; row<9; row++) {
+						for (let col=0; col<9; col++) {
+							for (let cand=1; cand<10; cand++) {
+								this.#display.removeCandidateFromCell(row, col, cand)
+							}
+						}
+					}
 				}
 			}
 		} else {
@@ -73,19 +120,6 @@ export class Sudoku {
 			console.warn("No list component given to sudoku object")
 		}
 
-		for (let row=0; row<9; row++) {
-			for (let col=0; col<9; col++) {
-				if (this.#board[row][col] == 0) {
-					this.#board[row][col] = {
-						1: true, 2: true, 3: true,
-						4: true, 5: true, 6: true,
-						7: true, 8: true, 9: true,
-					}
-				} else {
-					this.#unsolvedCells--
-				}
-			}
-		}
 	}
 
 	get unsolvedCells() {
