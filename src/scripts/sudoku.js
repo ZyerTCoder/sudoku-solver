@@ -141,6 +141,7 @@ export class Sudoku {
 					this.#board[c.row][c.col][c.cand] = false
 					if (this.#display) {
 						this.#display.removeCandidateFromCell(c.row, c.col, c.cand)
+						this.#display.setCellCandidateColor(c.row, c.col, c.cand, "white")
 					}
 					break
 				case "solved":
@@ -149,6 +150,9 @@ export class Sudoku {
 					if (this.#display) {
 						this.#display.setCell(c.row, c.col, c.cand)
 					}
+					break
+				case "yellow":
+					this.#display.setCellCandidateColor(c.row, c.col, c.cand, "white")
 					break
 				case "error":
 					break //TODO HANDLE HIGHLIGHTING

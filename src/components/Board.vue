@@ -107,9 +107,13 @@ export default {
 				c.cand = Number(c.cand)
 				switch(c.type) {
 					case "rm":
+					this.setCellCandidateColor(c.row, c.col, c.cand, "#ff4545")
 						break
 					case "solved":
 						this.setCellCandidateColor(c.row, c.col, c.cand, "#71c971")
+						break
+					case "yellow":
+					this.setCellCandidateColor(c.row, c.col, c.cand, "#fcb16f")
 						break
 					case "error":
 						break //TODO HANDLE HIGHLIGHTING
