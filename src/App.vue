@@ -116,10 +116,15 @@ export default {
 		},
 		startTest() { // TEMP - DELETE
 			this.sudoku = new Sudoku(
-				exampleSudokus["Hidden Singles"],
+				// "TEST_NO_CANDIDATES",
+				exampleSudokus["Naked Pairs"],
+				// "1................................................................................",
 				this.$refs.board,
-				this.$refs.techList)
-			// this.sudoku.removeCandidatesSimple()
+				this.$refs.techList
+			)
+			// for (let i=0; i<2; i++) {
+			// 	this.sudoku.next()
+			// }
 		},
 		autoNext() {
 			let timer = 250
