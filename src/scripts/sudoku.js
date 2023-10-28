@@ -298,6 +298,53 @@ export class Sudoku {
 	}
 }
 
+export class SetOfDicts {
+	#set
+
+	constructor() {
+		this.dicts_array = []
+		this.#set = new Set()
+	}
+
+	add(d) {
+		let string_ver = JSON.stringify(d)
+		if (this.#set.has(string_ver)) { return }
+		else {
+			this.#set.add(string_ver)
+			this.dicts_array.push(d)
+		}
+	}
+}
+
+export function* combinations(array, size) {
+	// let combs = []
+
+	let indices = []
+	for (let i=0; i<size; i++) {
+		indices.push(i)
+	}
+
+	while (true) {
+		if (indices[0] > array.length - (size + 1)) { break }
+		
+		for (let i=indices.length-1; i>0; i--) {
+			if (indices[i] >= array.length - (size - (i + 1)) ) {
+				indices[i-1] = indices[i-1] + 1
+				for (let ii=i; ii<indices.length; ii++) {
+					indices[ii] = indices[ii-1] + 1
+				}
+			}
+		}
+		
+		if (indices[indices.length-1] < array.length) {
+			// combs.push(Array.from(indices, (i) => array[i]))
+			yield Array.from(indices, (i) => array[i])
+			indices[indices.length-1] = indices[indices.length-1]+1
+		}
+	}
+
+	// return combs
+}
 
 export function matrixToString(board) {
 	return board.join("").replaceAll(",", "").replaceAll("0", ".")
