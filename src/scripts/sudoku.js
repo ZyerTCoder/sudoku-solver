@@ -2,6 +2,7 @@ import checkSolvedCells from "./techniques/checkSolvedCells.js"
 import removeCandidatesSimple from "./techniques/removeCandidatesSimple.js"
 import hiddenSingles from "./techniques/hiddenSingles.js"
 import nakedPairs from "./techniques/nakedPairs.js"
+import nakedCandidates from "./techniques/nakedCandidates.js"
 
 const floor = Math.floor
 
@@ -47,9 +48,15 @@ export class Sudoku {
 			enabled: true,
 		},
 		{
-			tech: nakedPairs,
-			name: "nakedPairs",
-			displayName: "Naked Pairs",
+			tech: (s) => nakedCandidates(s, 2),
+			name: "nakedPair",
+			displayName: "Naked Pair",
+			enabled: true,
+		},
+		{
+			tech: (s) => nakedCandidates(s, 3),
+			name: "nakedTriples",
+			displayName: "Naked Triples",
 			enabled: true,
 		},
 	]

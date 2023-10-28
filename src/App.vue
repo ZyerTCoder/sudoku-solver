@@ -117,7 +117,7 @@ export default {
 		startTest() { // TEMP - DELETE
 			this.sudoku = new Sudoku(
 				// "TEST_NO_CANDIDATES",
-				exampleSudokus["Naked Pairs"],
+				exampleSudokus["Naked Triple"],
 				// "1................................................................................",
 				this.$refs.board,
 				this.$refs.techList
