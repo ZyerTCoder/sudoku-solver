@@ -13,7 +13,7 @@ export default function checkSolvedCells(board) {
 				}
 				if (num_cands === 1) {
 					// console.log(board.board[row][col], typeof(board.board[row][col]))
-					out.push({row:row, col:col, cand: index, type:"solved"})
+					out.push({row:row, col:col, cand: Number(index), type:"solved"})
 				}
 			}
 		}
