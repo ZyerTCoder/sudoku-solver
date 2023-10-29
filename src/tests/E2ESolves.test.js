@@ -2,7 +2,7 @@ import exampleSudokus from "../scripts/exampleSudokus"
 import { Sudoku } from "../scripts/sudoku"
 import { expect, test } from "vitest"
 
-const IterationCap = 100000
+const IterationCap = 1000
 
 test("E2E: Easy board", () => {
 	const sudoku = new Sudoku(exampleSudokus["Easy"])
@@ -31,6 +31,54 @@ test("E2E: Invalid board", () => {
 
 test("E2E: Hidden Singles", () => {
 	const sudoku = new Sudoku(exampleSudokus["Hidden Singles"])
+	let result
+	let iterations = 0
+	do {
+		result = sudoku.next()
+		iterations++
+	} while (result && iterations < IterationCap)
+	expect(iterations).toBeLessThan(IterationCap)
+	expect(result).toBe(0)
+})
+
+test("E2E: Naked Pairs", () => {
+	const sudoku = new Sudoku(exampleSudokus["Naked Pairs"])
+	let result
+	let iterations = 0
+	do {
+		result = sudoku.next()
+		iterations++
+	} while (result && iterations < IterationCap)
+	expect(iterations).toBeLessThan(IterationCap)
+	expect(result).toBe(0)
+})
+
+test("E2E: Naked Pairs 2", () => {
+	const sudoku = new Sudoku(exampleSudokus["Naked Pairs 2"])
+	let result
+	let iterations = 0
+	do {
+		result = sudoku.next()
+		iterations++
+	} while (result && iterations < IterationCap)
+	expect(iterations).toBeLessThan(IterationCap)
+	expect(result).toBe(0)
+})
+
+test("E2E: Naked Pairs 3", () => {
+	const sudoku = new Sudoku(exampleSudokus["Naked Pairs 3"])
+	let result
+	let iterations = 0
+	do {
+		result = sudoku.next()
+		iterations++
+	} while (result && iterations < IterationCap)
+	expect(iterations).toBeLessThan(IterationCap)
+	expect(result).toBe(0)
+})
+
+test.todo("E2E: Naked/Hidden Triples", () => {
+	const sudoku = new Sudoku(exampleSudokus["Naked/Hidden Triples"])
 	let result
 	let iterations = 0
 	do {
