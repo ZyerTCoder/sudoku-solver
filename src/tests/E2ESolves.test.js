@@ -11,7 +11,7 @@ test("E2E: Easy board", () => {
 	do {
 		result = sudoku.next()
 		iterations++
-	} while (result && iterations < IterationCap)
+	} while (result != "no tech" && result != "invalid" && result && iterations < IterationCap)
 	expect(iterations).toBeLessThan(IterationCap)
 	expect(result).toBe(0)
 })
@@ -36,7 +36,7 @@ test("E2E: Hidden Singles", () => {
 	do {
 		result = sudoku.next()
 		iterations++
-	} while (result && iterations < IterationCap)
+	} while (result != "no tech" && result != "invalid" && result && iterations < IterationCap)
 	expect(iterations).toBeLessThan(IterationCap)
 	expect(result).toBe(0)
 })
@@ -48,7 +48,7 @@ test("E2E: Naked Pairs", () => {
 	do {
 		result = sudoku.next()
 		iterations++
-	} while (result && iterations < IterationCap)
+	} while (result != "no tech" && result != "invalid" && result && iterations < IterationCap)
 	expect(iterations).toBeLessThan(IterationCap)
 	expect(result).toBe(0)
 })
@@ -60,7 +60,7 @@ test("E2E: Naked Pairs 2", () => {
 	do {
 		result = sudoku.next()
 		iterations++
-	} while (result && iterations < IterationCap)
+	} while (result != "no tech" && result != "invalid" && result && iterations < IterationCap)
 	expect(iterations).toBeLessThan(IterationCap)
 	expect(result).toBe(0)
 })
@@ -72,19 +72,19 @@ test("E2E: Naked Pairs 3", () => {
 	do {
 		result = sudoku.next()
 		iterations++
-	} while (result && iterations < IterationCap)
+	} while (result != "no tech" && result != "invalid" && result && iterations < IterationCap)
 	expect(iterations).toBeLessThan(IterationCap)
 	expect(result).toBe(0)
 })
 
-test.todo("E2E: Naked/Hidden Triples", () => {
+test("E2E: Naked/Hidden Triples", () => {
 	const sudoku = new Sudoku(exampleSudokus["Naked/Hidden Triples"])
 	let result
 	let iterations = 0
 	do {
 		result = sudoku.next()
 		iterations++
-	} while (result && iterations < IterationCap)
+	} while (result != "no tech" && result != "invalid" && result && iterations < IterationCap)
 	expect(iterations).toBeLessThan(IterationCap)
 	expect(result).toBe(0)
 })
