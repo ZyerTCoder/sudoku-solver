@@ -46,7 +46,7 @@ export default function nakedCandidates(board, number) {
 					if (!cols.includes(col) && board.isCellUnsolved(row, col)) {
 						for (let [cand, value] of Object.entries(cands)) {
 							if (value && board.board[row][col][cand]) {
-								highlight_flag = [cols, cands]
+								highlight_flag = cols
 								out.add({
 									row:row, col:col, cand:Number(cand), type:"rm", 
 									reason:`Naked ${num_to_str[number]} ${Object.keys(cands).reduce((acc, cand) => acc + (cands[cand] ? cand : ""), "")} in row`
@@ -58,7 +58,7 @@ export default function nakedCandidates(board, number) {
 			}
 
 			if (highlight_flag) {
-				for (let col of highlight_flag[0]) {
+				for (let col of highlight_flag) {
 					let cands = board.board[row][col]
 					for (let [cand, value] of Object.entries(cands)) {
 						if (value) {
