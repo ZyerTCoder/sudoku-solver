@@ -39,4 +39,10 @@ p {
 	font-size: .8rem;
 	user-select: none;
 }
+
+@media (max-width: 450px) {
+	p {
+		font-size: 2.5vw;
+	}
+}
 </style>

@@ -133,21 +133,27 @@ export default {
 <style scoped>
 .board {
 	background: black;
-	width: 450px;
-	height: 450px;
+	width: 100%;
+	max-width: 450px;
 	margin: 0 auto;
 	border-style: solid;
 	border-width: 4px 4px 5px 5px;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
+	aspect-ratio: 1/1;
 }
 
 p {
 	margin: 0;
-	font-size: .63rem;
+	font-size: 0.63rem;
 	user-select: none;
 	display: block;
+}
+@media (max-width: 450px) {
+	p {
+		font-size: 2vw;
+	}
 }
 
 p:hover {

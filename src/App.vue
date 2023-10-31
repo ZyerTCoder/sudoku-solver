@@ -195,6 +195,13 @@ p {
 	justify-content: center;
 	margin: 0;
 	padding: 0;
+	width: 100%;
+}
+
+@media (max-width: 600px) {
+	.sidebyside {
+		flex-direction: column;
+	}
 }
 
 </style>

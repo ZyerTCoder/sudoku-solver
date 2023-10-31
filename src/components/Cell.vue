@@ -72,17 +72,16 @@ export default {
 	justify-content: space-between;
 }
 .solved {
-	font-size: 2rem;
+	font-size: 2.36em;
 	--color: black;
 	color: var(--color);
 }
-.candidates {
-	width: 33%;
-	height: 33%;
+@media (max-width: 450px) {
+	.solved {
+		font-size: 8.6vw;
+	}
 }
-.candidate {
-	font-size: .8rem;
-}
+
 p {
 	user-select: none;
 }
