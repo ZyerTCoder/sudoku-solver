@@ -1,13 +1,13 @@
 <template>
 	<!-- <h1>{{ title }}</h1> -->
-	<button @click="toggleLoadModal()">Load sudoku</button>
-	<button @click="bruteforceSudoku()" :disabled="running_timer[0]">
-		Brute-force
-	</button>
-	<!-- :disabled="!sudoku" bits give a warning on load, find alternative -->
-	<button @click="resetBoard()">Reset Board</button>
-	<button @click="next()" :disabled="running_timer[0]">Next Step</button>
-	<button @click="autoNext()" :disabled="running_timer[0]">Auto Step</button>
+	<div class="buttons">
+		<button @click="toggleLoadModal()">Load sudoku</button>
+		<!-- :disabled="!sudoku" bits give a warning on load, find alternative -->
+		<button @click="next()" :disabled="running_timer[0]">Next Step</button>
+		<button @click="autoNext()" :disabled="running_timer[0]">Auto Step</button>
+		<button @click="bruteforceSudoku()" :disabled="running_timer[0]">Brute-force</button>
+		<button @click="resetBoard()">Reset Board</button>
+	</div>
 	<div class="sidebyside">
 		<Board ref="board" @start="startTest" /> <!-- TEMP - DELETE the @start -->
 		<List ref="techList"/>
@@ -170,11 +170,15 @@ h1 {
 	margin: 20px auto 10px;
 }
 button {
-	margin: 10px auto;
 	width: 100px;
-	height: 30px;
+	height: 40px;
 }
-
+.buttons {
+	justify-content: center;
+	width: 100%;
+	margin: 10px auto;
+	display: flex;
+}
 .modalButton {
 	margin: 5px auto;
 	border-radius: 4px;
@@ -193,9 +197,9 @@ p {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
+	width: 100%;
 	margin: 0;
 	padding: 0;
-	width: 100%;
 }
 
 @media (max-width: 600px) {

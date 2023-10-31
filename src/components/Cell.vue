@@ -61,6 +61,7 @@ export default {
 	margin: auto;
 	display: flex; 
 }
+
 .cell {
 	background: white;
 	width: 11.1111%;
@@ -71,11 +72,13 @@ export default {
 	flex-wrap: wrap;
 	justify-content: space-between;
 }
+
 .solved {
 	font-size: 2.36em;
 	--color: black;
 	color: var(--color);
 }
+
 @media (max-width: 450px) {
 	.solved {
 		font-size: 8.6vw;

@@ -27,14 +27,15 @@ export default {
 	margin: auto;
 	display: flex; 
 }
+
 .candidate {
 	width: 33%;
 	height: 33%;
 	--background: "white";
 	background: var(--background);
 	border-radius: 50%;
-
 }
+
 p {
 	font-size: .8rem;
 	user-select: none;

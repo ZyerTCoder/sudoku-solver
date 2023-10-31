@@ -150,6 +150,7 @@ p {
 	user-select: none;
 	display: block;
 }
+
 @media (max-width: 450px) {
 	p {
 		font-size: 2vw;

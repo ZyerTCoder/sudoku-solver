@@ -60,4 +60,15 @@ p {
 .highlight {
 	background-color: green;
 }
+
+@media (max-width: 450px) {
+	#techList {
+		margin: auto;
+	}
+
+	p {
+		display: flex;
+		justify-content: center;
+	}
+}
 </style>
