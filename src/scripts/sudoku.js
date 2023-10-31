@@ -3,6 +3,7 @@ import removeCandidatesSimple from "./techniques/removeCandidatesSimple.js"
 import hiddenSingles from "./techniques/hiddenSingles.js"
 import nakedPairs from "./techniques/nakedPairs.js"
 import nakedCandidates from "./techniques/nakedCandidates.js"
+import hiddenCandidates from "./techniques/hiddenCandidates.js"
 
 const floor = Math.floor
 
@@ -49,14 +50,38 @@ export class Sudoku {
 		},
 		{
 			tech: (s) => nakedCandidates(s, 2),
-			name: "nakedPair",
-			displayName: "Naked Pair",
+			name: "nakedPairs",
+			displayName: "Naked Pairs",
 			enabled: true,
 		},
 		{
 			tech: (s) => nakedCandidates(s, 3),
-			name: "nakedTriples",
-			displayName: "Naked Triples",
+			name: "nakedTrios",
+			displayName: "Naked Trios",
+			enabled: true,
+		},
+		{
+			tech: (s) => hiddenCandidates(s, 2),
+			name: "hiddenPairs",
+			displayName: "Hidden Pairs",
+			enabled: true,
+		},
+		{
+			tech: (s) => hiddenCandidates(s, 3),
+			name: "hiddenTrios",
+			displayName: "Hidden Trios",
+			enabled: true,
+		},
+		{
+			tech: (s) => nakedCandidates(s, 4),
+			name: "nakedQuads",
+			displayName: "Naked Quads",
+			enabled: true,
+		},
+		{
+			tech: (s) => hiddenCandidates(s, 4),
+			name: "hiddenQuads",
+			displayName: "Hidden Quads",
 			enabled: true,
 		},
 	]
@@ -159,7 +184,9 @@ export class Sudoku {
 					}
 					break
 				case "yellow":
-					this.#display.setCellCandidateColor(c.row, c.col, c.cand, "white")
+					if (this.#display) {
+						this.#display.setCellCandidateColor(c.row, c.col, c.cand, "white")
+					}
 					break
 				case "error":
 					break //TODO HANDLE HIGHLIGHTING
