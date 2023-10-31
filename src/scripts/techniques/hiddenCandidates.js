@@ -231,7 +231,6 @@ export default function hiddenCandidates(board, number) {
 					for (let cand of candidatesToRemove) {
 						if (board.board[cell[0]][cell[1]][cand]) {
 							highlight_flag = [comb, hiddenSet]
-							console.log(hiddenSet)
 							out.add({
 								row:Number(cell[0]), col:Number(cell[1]), cand:cand, type:"rm", 
 								reason:`Hidden ${num_to_str[number]} ${hiddenSet.join("")} in box`
