@@ -1,16 +1,48 @@
 <template>
 	<!-- <h1>{{ title }}</h1> -->
-	<div class="buttons">
-		<button @click="toggleLoadModal()">Load sudoku</button>
-		<!-- :disabled="!sudoku" bits give a warning on load, find alternative -->
-		<button @click="next()" :disabled="running_timer[0]">Next Step</button>
-		<button @click="autoNext()" :disabled="running_timer[0]">Auto Step</button>
-		<button @click="bruteforceSudoku()" :disabled="running_timer[0]">Brute-force</button>
-		<button @click="resetBoard()">Reset Board</button>
+	<div  v-if="!isMobile()">
+		<div class="buttons">
+			<button @click="toggleLoadModal()">Load sudoku</button>
+			<!-- :disabled="!sudoku" bits give a warning on load, find alternative -->
+			<button @click="next()" :disabled="running_timer[0]">Next Step</button>
+			<button @click="autoNext()" :disabled="running_timer[0]">Auto Step</button>
+			<button @click="bruteforceSudoku()" :disabled="running_timer[0]">Brute-force</button>
+			<button @click="resetBoard()">Reset Board</button>
+		</div>
+		<div class="boardAndList">
+			<Board ref="board" @start="startTest" /> <!-- TEMP - DELETE the @start -->
+			<List ref="techList"/>
+		</div>
 	</div>
-	<div class="sidebyside">
-		<Board ref="board" @start="startTest" /> <!-- TEMP - DELETE the @start -->
-		<List ref="techList"/>
+	<!-- portrait mobile -->
+	<div v-if="isMobile() && !isWiderThanTall()">
+		<div class="boardAndList">
+			<Board ref="board" @start="startTest" /> <!-- TEMP - DELETE the @start -->
+			<List ref="techList"/>
+		</div>
+		<div class="buttons footer">
+			<button @click="toggleLoadModal()">Load sudoku</button>
+			<!-- :disabled="!sudoku" bits give a warning on load, find alternative -->
+			<button @click="next()" :disabled="running_timer[0]">Next Step</button>
+			<button @click="autoNext()" :disabled="running_timer[0]">Auto Step</button>
+			<button @click="bruteforceSudoku()" :disabled="running_timer[0]">Brute-force</button>
+			<button @click="resetBoard()">Reset Board</button>
+		</div>
+	</div>
+	<!-- landscape mobile -->
+	<div v-if="isMobile() && isWiderThanTall()">
+		<div class="sidebyside">
+			<Board ref="board" @start="startTest" /> <!-- TEMP - DELETE the @start -->
+			<List ref="techList"/>
+		</div>
+		<div class="buttons footer">
+			<button @click="toggleLoadModal()">Load sudoku</button>
+			<!-- :disabled="!sudoku" bits give a warning on load, find alternative -->
+			<button @click="next()" :disabled="running_timer[0]">Next Step</button>
+			<button @click="autoNext()" :disabled="running_timer[0]">Auto Step</button>
+			<button @click="bruteforceSudoku()" :disabled="running_timer[0]">Brute-force</button>
+			<button @click="resetBoard()">Reset Board</button>
+		</div>
 	</div>
 	<Modal 
 		v-if="showLoadModal"
@@ -35,6 +67,7 @@
 </template>
 
 <script>
+
 import Board from "./components/Board.vue"
 import Modal from "./components/Modal.vue"
 import List from "./components/List.vue"
@@ -69,6 +102,7 @@ export default {
 			this.sudoku = new Sudoku(board, this.$refs.board, this.$refs.techList)
 		},
 		bruteforceSudoku() {
+			console.log(navigator.userAgent)
 			const boardDisplay = this.$refs.board
 			const timer = this.loop_timer
 			const running_timer = this.running_timer
@@ -153,6 +187,12 @@ export default {
 				return 0
 			}
 			return result
+		},
+		isMobile() {
+			return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+		},
+		isWiderThanTall() {
+			return window.innerHeight < window.innerWidth
 		}
 	},
 }
@@ -193,6 +233,15 @@ p {
 	margin: 0;
 }
 
+.boardAndList {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
 .sidebyside {
 	display: flex;
 	flex-direction: row;
@@ -202,10 +251,25 @@ p {
 	padding: 0;
 }
 
-@media (max-width: 600px) {
-	.sidebyside {
+@media (pointer:none), (pointer:coarse), (max-width: 600px) {
+	.boardAndList {
+		position: fixed;
+		top: 0;
 		flex-direction: column;
 	}
 }
 
+@media (max-width: 600px) {
+	.boardAndList {
+		flex-direction: column;
+	}
+}
+
+.footer {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
 </style>

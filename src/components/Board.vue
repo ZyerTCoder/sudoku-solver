@@ -151,9 +151,13 @@ p {
 	display: block;
 }
 
-@media (max-width: 450px) {
+@media (max-width: 455px) {
+	.board {
+		border-width: 0px 0px 3px 1px;
+	}
+	
 	p {
-		font-size: 2vw;
+		font-size: 2.2vw;
 	}
 }
 

@@ -61,7 +61,7 @@ p {
 	background-color: green;
 }
 
-@media (max-width: 450px) {
+@media (pointer:none), (pointer:coarse), (max-width: 600px) {
 	#techList {
 		margin: auto;
 	}
