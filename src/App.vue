@@ -16,13 +16,13 @@
 	</div>
 	<!-- portrait mobile -->
 	<div v-if="isMobile() && !isLandscape()">
-		<div class="boardAndList">
-			<Board ref="board" @start="startTest" /> <!-- TEMP - DELETE the @start -->
-			<List ref="techList"/>
+		<div class="verticalMobile">
+			<div id="verticalMobileFiller"></div>
+			<List ref="techList" class="listMobile"/>
 		</div>
+		<Board ref="board" @start="startTest" class="header" hideCopyString="true"/> <!-- TEMP - DELETE the @start -->
 		<div class="buttons footer">
 			<button @click="toggleLoadModal()">Load sudoku</button>
-			<!-- :disabled="!sudoku" bits give a warning on load, find alternative -->
 			<button @click="next()" :disabled="running_timer[0]">Next Step</button>
 			<button @click="autoNext()" :disabled="running_timer[0]">Auto Step</button>
 			<button @click="bruteforceSudoku()" :disabled="running_timer[0]">Brute-force</button>
@@ -271,6 +271,36 @@ p {
 	}
 }
 
+.verticalMobile {
+	height: -webkit-calc(100% - 40px);
+	height: -moz-calc(100% - 40px);
+	height: calc(100% - 40px);
+	position: fixed;
+	top: 0;
+	width: 100%;
+	overflow: auto;
+}
+
+#verticalMobileFiller {
+	/* background: green; */
+	width: 100%;
+	max-width: 450px;
+	margin: 0;
+	aspect-ratio: 1/1;
+}
+
+/* .listMobile {
+	background-color: red;
+} */
+
+.header {
+	position: fixed;
+	top: 0;
+	width: 100%;
+	margin: 0;
+	padding: 0;
+}
+
 .footer {
 	position: fixed;
 	bottom: 0;
@@ -283,7 +313,6 @@ p {
 	::-webkit-scrollbar {
 		width: 5px;
 	}
-
 
 	::-webkit-scrollbar-thumb {
 		background-color: #888;

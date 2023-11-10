@@ -63,7 +63,8 @@ p {
 
 @media (pointer:none), (pointer:coarse), (max-width: 600px) {
 	#techList {
-		margin: auto;
+		width: 100%;
+		padding: 0;
 	}
 
 	p {

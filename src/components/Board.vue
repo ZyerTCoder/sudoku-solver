@@ -7,7 +7,7 @@
 			ref="cells"
 			/>
 		</div>
-		<p class="consolas" @click="copyBoardString">{{ boardString }}</p>
+		<p v-if="!hideCopyString" class="consolas" @click="copyBoardString">{{ boardString }}</p>
 	</div>
 </template>
 
@@ -23,6 +23,7 @@ export default {
 			boardString: "",
 		}
 	},
+	props: ["hideCopyString"],
 	mounted() {
 		let cells = this.$refs.cells
 		for (let index = 0; index < 9; index++) {
