@@ -15,7 +15,7 @@
 		</div>
 	</div>
 	<!-- portrait mobile -->
-	<div v-if="isMobile() && !isWiderThanTall()">
+	<div v-if="isMobile() && !isLandscape()">
 		<div class="boardAndList">
 			<Board ref="board" @start="startTest" /> <!-- TEMP - DELETE the @start -->
 			<List ref="techList"/>
@@ -29,8 +29,8 @@
 			<button @click="resetBoard()">Reset Board</button>
 		</div>
 	</div>
-	<!-- landscape mobile -->
-	<div v-if="isMobile() && isWiderThanTall()">
+	<!-- landscape mobile TODO-->
+	<div v-if="isMobile() && isLandscape()">
 		<div class="sidebyside">
 			<Board ref="board" @start="startTest" /> <!-- TEMP - DELETE the @start -->
 			<List ref="techList"/>
@@ -191,7 +191,7 @@ export default {
 		isMobile() {
 			return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 		},
-		isWiderThanTall() {
+		isLandscape() {
 			return window.innerHeight < window.innerWidth
 		}
 	},
@@ -221,6 +221,8 @@ button {
 }
 .modalButton {
 	margin: 5px auto;
+	padding: 5px;
+	height: fit-content;
 	border-radius: 4px;
 	width: 180px;
 }
@@ -251,11 +253,15 @@ p {
 	padding: 0;
 }
 
-@media (pointer:none), (pointer:coarse), (max-width: 600px) {
+@media (pointer: none), (pointer: coarse) {
 	.boardAndList {
 		position: fixed;
 		top: 0;
 		flex-direction: column;
+	}
+
+	.modalButton {
+		padding: 10px;
 	}
 }
 
@@ -271,5 +277,23 @@ p {
 	width: 100%;
 	margin: 0;
 	padding: 0;
+}
+
+
+@media (pointer: fine) {
+	::-webkit-scrollbar-track {
+	margin: 60px 0 25px 0;
+	}
+	
+	::-webkit-scrollbar {
+		width: 5px;
+	}
+
+
+	::-webkit-scrollbar-thumb {
+	background-color: #888;
+	border-radius: 5px;
+	height: 50px;
+	}
 }
 </style>

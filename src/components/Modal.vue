@@ -30,12 +30,14 @@ export default {
 <style scoped>
 	.modal {
 		padding: 20px 15px;
-		margin: 100px auto;
+		margin: 20% auto;
 		width: 200px;
+		max-height: 60%;
 		background: #ddd;
 		border-radius: 10px;
 		display: flex;
 		flex-direction: column;
+		overflow: auto;
 	}
 
 	.backdrop {
@@ -45,4 +47,18 @@ export default {
 		width: 100%;
 		height: 100%;
 	}
+
+	/* @media (pointer:none), (pointer:coarse) {
+	.boardAndList {
+		position: fixed;
+		top: 0;
+		flex-direction: column;
+	}
+}
+
+	@media (max-height: 600px) {
+		.boardAndList {
+			flex-direction: column;
+		}
+	} */
 </style>
