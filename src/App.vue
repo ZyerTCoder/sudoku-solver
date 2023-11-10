@@ -279,21 +279,16 @@ p {
 	padding: 0;
 }
 
-
 @media (pointer: fine) {
-	::-webkit-scrollbar-track {
-	margin: 60px 0 25px 0;
-	}
-	
 	::-webkit-scrollbar {
 		width: 5px;
 	}
 
 
 	::-webkit-scrollbar-thumb {
-	background-color: #888;
-	border-radius: 5px;
-	height: 50px;
+		background-color: #888;
+		border-radius: 5px;
+		height: 50px;
 	}
 }
 </style>

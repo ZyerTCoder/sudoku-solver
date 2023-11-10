@@ -48,6 +48,12 @@ export default {
 		height: 100%;
 	}
 
+	@media (pointer: fine) {
+		::-webkit-scrollbar-track {
+			margin: 60px 0 25px 0;
+		}
+	}
+
 	/* @media (pointer:none), (pointer:coarse) {
 	.boardAndList {
 		position: fixed;
