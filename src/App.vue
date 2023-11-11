@@ -16,7 +16,7 @@
 	</div>
 	<!-- portrait mobile -->
 	<div v-if="isMobile && !isLandscape">
-		<div class="verticalMobile">
+		<div id="verticalMobile">
 			<div id="verticalMobileFiller"></div>
 			<div style="height:5px; width: 100%;"></div>
 			<List ref="techList" class="listMobile"/>
@@ -299,7 +299,7 @@ p {
 	}
 }
 
-.verticalMobile {
+#verticalMobile {
 	height: -webkit-calc(100% - 40px);
 	height: -moz-calc(100% - 40px);
 	height: calc(100% - 40px);

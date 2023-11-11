@@ -87,6 +87,12 @@ export class Sudoku {
 	]
 
 	constructor(sudokuString, boardComponent, techList) {
+		let i = 0
+		for (let tech of this.techs) {
+			tech.index = i
+			i++
+		}
+
 		if (sudokuString === "TEST_NO_CANDIDATES") {
 			this.#board = []
 			for (let row=0; row<9; row++) {
