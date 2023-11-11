@@ -18,7 +18,9 @@
 	<div v-if="isMobile && !isLandscape">
 		<div class="verticalMobile">
 			<div id="verticalMobileFiller"></div>
+			<div style="height:5px; width: 100%;"></div>
 			<List ref="techList" class="listMobile"/>
+			<div style="height:15px; width: 100%;"></div>
 		</div>
 		<Board ref="board" @start="startTest" class="header" hideCopyString="true"/>
 		<div class="buttons footer">
@@ -204,6 +206,7 @@ export default {
 	},
 	created() {
 		window.addEventListener("resize", this.resizeEventHandler);
+		this.resizeEventHandler()
 	},
 	destroyed() {
 		window.removeEventListener("resize", this.resizeEventHandler);
