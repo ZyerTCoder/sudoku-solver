@@ -1,13 +1,13 @@
 <template>
 	<!-- <h1>{{ title }}</h1> -->
-	<div  v-if="!isMobile()">
+	<div  v-if="!isMobile">
 		<div class="buttons">
-			<button @click="toggleLoadModal()">Load sudoku</button>
+			<button class="button" @click="toggleLoadModal()">Load sudoku</button>
 			<!-- :disabled="!sudoku" bits give a warning on load, find alternative -->
-			<button @click="next()" :disabled="running_timer[0]">Next Step</button>
-			<button @click="autoNext()" :disabled="running_timer[0]">Auto Step</button>
-			<button @click="bruteforceSudoku()" :disabled="running_timer[0]">Brute-force</button>
-			<button @click="resetBoard()">Reset Board</button>
+			<button class="button" @click="next()" :disabled="running_timer[0]">Next Step</button>
+			<button class="button" @click="autoNext()" :disabled="running_timer[0]">Auto Step</button>
+			<button class="button" @click="bruteforceSudoku()" :disabled="running_timer[0]">Brute-force</button>
+			<button class="button" @click="resetBoard()">Reset Board</button>
 		</div>
 		<div class="boardAndList">
 			<Board ref="board" @start="startTest" /> <!-- TEMP - DELETE the @start -->
@@ -15,34 +15,32 @@
 		</div>
 	</div>
 	<!-- portrait mobile -->
-	<div v-if="isMobile() && !isLandscape()">
+	<div v-if="isMobile && !isLandscape">
 		<div class="verticalMobile">
 			<div id="verticalMobileFiller"></div>
 			<List ref="techList" class="listMobile"/>
 		</div>
-		<Board ref="board" @start="startTest" class="header" hideCopyString="true"/> <!-- TEMP - DELETE the @start -->
+		<Board ref="board" @start="startTest" class="header" hideCopyString="true"/>
 		<div class="buttons footer">
-			<button @click="toggleLoadModal()">Load sudoku</button>
-			<button @click="next()" :disabled="running_timer[0]">Next Step</button>
-			<button @click="autoNext()" :disabled="running_timer[0]">Auto Step</button>
-			<button @click="bruteforceSudoku()" :disabled="running_timer[0]">Brute-force</button>
-			<button @click="resetBoard()">Reset Board</button>
+			<button class="button" @click="toggleLoadModal()">Load Sudoku</button>
+			<button class="button" @click="next()" :disabled="running_timer[0]">Next Step</button>
+			<button class="button" @click="autoNext()" :disabled="running_timer[0]">Auto Step</button>
+			<button class="button" @click="bruteforceSudoku()" :disabled="running_timer[0]">Brute-force</button>
 		</div>
 	</div>
 	<!-- landscape mobile TODO-->
-	<div v-if="isMobile() && isLandscape()">
-		<div class="sidebyside">
-			<Board ref="board" @start="startTest" /> <!-- TEMP - DELETE the @start -->
+	<div v-if="isMobile && isLandscape">
+		Don't use me on landscape mode please thanks
+		<!-- <div class="sidebyside">
+			<Board ref="board" @start="startTest" />
 			<List ref="techList"/>
 		</div>
 		<div class="buttons footer">
 			<button @click="toggleLoadModal()">Load sudoku</button>
-			<!-- :disabled="!sudoku" bits give a warning on load, find alternative -->
 			<button @click="next()" :disabled="running_timer[0]">Next Step</button>
 			<button @click="autoNext()" :disabled="running_timer[0]">Auto Step</button>
 			<button @click="bruteforceSudoku()" :disabled="running_timer[0]">Brute-force</button>
-			<button @click="resetBoard()">Reset Board</button>
-		</div>
+		</div> -->
 	</div>
 	<Modal 
 		v-if="showLoadModal"
@@ -50,6 +48,7 @@
 		@load="loadSudoku"
 	>
 		<p>Paste your own or pick from the examples below</p>
+		<button class="modalButton" @click="resetBoard(); toggleLoadModal()">Reset Board</button>
 		<button 
 			class="modalButton" 
 			v-for="(value, key) in examples" 
@@ -88,6 +87,8 @@ export default {
 			showMessageModal: false,
 			message: "",
 			examples: exampleSudokus,
+			isLandscape: false,
+			isMobile: false,
 		}
 	},
 	methods: {
@@ -188,12 +189,24 @@ export default {
 			}
 			return result
 		},
-		isMobile() {
-			return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+		checkIsMobile() {
+			this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+			return this.isMobile
 		},
-		isLandscape() {
-			return window.innerHeight < window.innerWidth
+		checkIsLandscape() {
+			this.isLandscape = window.innerHeight < window.innerWidth
+			return this.isLandscape
+		},
+		resizeEventHandler(e) {
+			this.checkIsLandscape()
+			this.checkIsMobile()
 		}
+	},
+	created() {
+		window.addEventListener("resize", this.resizeEventHandler);
+	},
+	destroyed() {
+		window.removeEventListener("resize", this.resizeEventHandler);
 	},
 }
 </script>
@@ -209,16 +222,28 @@ h1 {
 	flex-direction: column;
 	margin: 20px auto 10px;
 }
-button {
+
+.button {
 	width: 100px;
-	height: 40px;
+	height: 50px;
+	padding: 0 10px;
+	text-align: center;
+	text-decoration: none;
+	border: 1px solid #ccc;
+	color: #333;
+	background-color: #eee;
+	cursor: pointer;
+	flex: auto;
 }
+
 .buttons {
 	justify-content: center;
 	width: 100%;
+	max-width: 600px;
 	margin: 10px auto;
 	display: flex;
 }
+
 .modalButton {
 	margin: 5px auto;
 	padding: 5px;
@@ -307,6 +332,7 @@ p {
 	width: 100%;
 	margin: 0;
 	padding: 0;
+	justify-content: space-between;
 }
 
 @media (pointer: fine) {
